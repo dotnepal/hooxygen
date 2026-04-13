@@ -1,5 +1,5 @@
 #"$schema" = "./node_modules/wrangler/config-schema.json"
-name = "hooxygen"
+name = "ho-gas-factory"
 compatibility_date = "2026-03-01"
 pages_build_output_dir = "./dist"
 
