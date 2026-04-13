@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/* ─── Brand Design Tokens ─────────────────────────────────────────────────── */
+@theme {
+  /* Colors */
+  --color-brand-blue: #1e40af;
+  --color-brand-light: #eff6ff;
+  --color-brand-dark: #1e3a5f;
+  --color-brand-accent: #3b82f6;
+  --color-brand-steel: #64748b;
+
+  /* Typography */
+  --font-display: "Sora", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+
+  /* Radii */
+  --radius-card: 0.75rem;
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px -4px rgb(30 64 175 / 0.12);
+  --shadow-card-hover: 0 12px 40px -8px rgb(30 64 175 / 0.22);
+  --shadow-nav: 0 1px 12px 0 rgb(30 64 175 / 0.10);
+}
+
+/* ─── Base Layer ──────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-body);
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  /* Focus ring — brand-styled, appears only on keyboard nav */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Remove focus ring for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Smooth transition on all interactive elements */
+  a, button {
+    transition: all 200ms ease-out;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* ─── Scroll-triggered & Page Animations ─────────────────────────────────── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-on-scroll {
+  opacity: 1;
+}
+
+/*
+ * Respect prefers-reduced-motion: users who opt out of motion see content
+ * immediately (no opacity:0 flash) and no animations run.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-on-scroll {
+    opacity: 1;
+  }
+
+  .animate-on-scroll[data-visible] {
+    animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .page-transition {
+    animation: pageFadeIn 0.35s ease-out;
+  }
+}
+
+/* ─── Screen-reader Only ──────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* FOUC prevention: hide the English SSG pre-render for Nepali users until React
+   mounts with the correct language. The blocking <script> in each HTML page sets
+   data-lang="ne" before paint; RootLayout's useEffect adds lang-ready on mount. */
+html[data-lang="ne"] #root {
+  visibility: hidden;
+}
+
+html:not([data-lang="ne"]) #root,
+html[data-lang="ne"].lang-ready #root {
+  visibility: visible;
+}

@@ -1,0 +1,257 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "products": "Products",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "language": "NP"
+  },
+  "home": {
+    "hero": {
+      "tagline": "Reliable Gas Supply for Medical & Industrial Use",
+      "subtitle": "Serving hospitals, clinics, and industrial users across Nepal with safe, certified gas cylinders.",
+      "cta": {
+        "contact": "Contact Us",
+        "products": "Explore Products"
+      }
+    },
+    "gas": {
+      "sectionTitle": "Our Gases",
+      "oxygen": {
+        "title": "Oxygen Gas",
+        "desc": "Medical-grade oxygen for hospitals, clinics, and homecare providers."
+      },
+      "nitrogen": {
+        "title": "Nitrogen Gas",
+        "desc": "Industrial nitrogen for manufacturing, laboratories, and food processing."
+      },
+      "hydrogen": {
+        "title": "Hydrogen Gas",
+        "desc": "High-purity hydrogen for industrial and research applications."
+      },
+      "carbondioxide": {
+        "title": "Carbondioxide Gas",
+        "desc": "Carbondioxide for various applications."
+      },
+      "argon": {
+        "title": "Argon Gas",
+        "desc": "Argon gas for industrial applications, used as an inert gas shield in arc welding, also used in metal processing and refining. "
+      },
+      "learnMore": "Learn More"
+    },
+    "services": {
+      "sectionTitle": "What We Offer",
+      "rent": "Rent",
+      "sale": "Sale",
+      "refilling": "Refilling",
+      "bulkOrders": "Bulk Orders",
+      "delivery": "Delivery"
+    },
+    "trust": {
+      "sectionTitle": "Trusted Partner",
+      "tagline": "Certified. Safe. Trusted by Hospitals across Nepal."
+    },
+    "cta": {
+      "title": "Ready to place an order?",
+      "button": "Contact Us Now"
+    }
+  },
+  "services": {
+    "hero": {
+      "title": "Our Services",
+      "subtitle": "Comprehensive gas supply solutions for medical and industrial needs across Nepal."
+    },
+    "sectionTitle": "What We Offer",
+    "rent": { "title": "Cylinder Rental", "desc": "Flexible short and long-term rental options for cylinders of all sizes." },
+    "sale": { "title": "Cylinder Sales", "desc": "Purchase cylinders outright for permanent ownership and peace of mind." },
+    "refilling": { "title": "Cylinder Refilling", "desc": "Fast, safe refilling of your existing cylinders — bring yours or use ours." },
+    "bulk": { "title": "Bulk Orders", "desc": "High-volume supply contracts for hospitals, clinics, and industrial facilities." },
+    "delivery": { "title": "Same-Day Delivery", "desc": "Local delivery within the Kathmandu valley on the same business day." },
+    "pickup": { "title": "Customer Pickup", "desc": "Pick up directly at our facility at your convenience — no appointment needed." },
+    "cta": {
+      "title": "Ready to place an order?",
+      "subtitle": "Contact us today and our team will respond promptly.",
+      "button": "Contact Us Now"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "About HO Oxygen",
+      "subtitle": "Our story, mission, and commitment to safe gas supply across Nepal."
+    },
+    "story": {
+      "title": "Our Story",
+      "body": "HO Oxygen has been providing safe, reliable gas supply to hospitals, clinics, and industrial users across Nepal. Our commitment to quality and safety drives everything we do."
+    },
+    "team": {
+      "title": "Our Team"
+    },
+    "areas": {
+      "title": "Service Areas",
+      "local": "Local",
+      "regional": "Regional",
+      "national": "National"
+    },
+    "whyUs": {
+      "title": "Why Choose Us",
+      "safety": "Safety First",
+      "safetyDesc": "Rigorous safety standards at every step.",
+      "certified": "Certified",
+      "certifiedDesc": "Products meet medical and industrial certifications.",
+      "delivery": "Fast Delivery",
+      "deliveryDesc": "Same-day delivery for local orders.",
+      "support": "24/7 Support",
+      "supportDesc": "Round-the-clock support for emergencies."
+    }
+  },
+  "products": {
+    "hero": {
+      "title": "Our Products & Services",
+      "subtitle": "Quality gas cylinders and services for every need."
+    },
+    "tabs": {
+      "oxygen": "Oxygen",
+      "nitrogen": "Nitrogen",
+      "hydrogen": "Hydrogen",
+      "carbondioxide": "Carbondioxide",
+      "argon": "Argon"
+    },
+    "table": {
+      "size": "Size",
+      "capacity": "Capacity",
+      "weight": "Weight",
+      "rent": "Rent",
+      "sale": "Sale",
+      "pricing": "Pricing"
+    },
+    "pricing": {
+      "contact": "Contact"
+    },
+    "services": {
+      "title": "Our Services",
+      "refilling": {
+        "title": "Cylinder Refilling",
+        "desc": "Fast and reliable refilling service for your existing cylinders."
+      },
+      "bulk": {
+        "title": "Bulk Orders",
+        "desc": "Large volume orders for hospitals and industrial facilities."
+      },
+      "delivery": {
+        "title": "Delivery",
+        "desc": "Same-day local delivery and regional shipping available."
+      }
+    },
+    "oxygen": {
+      "desc": "Medical-grade oxygen for hospitals, clinics, homecare providers, and industrial use. All cylinders are tested and certified safe."
+    },
+    "nitrogen": {
+      "desc": "High-purity industrial nitrogen for manufacturing, food processing, laboratories, and metal fabrication applications."
+    },
+    "hydrogen": {
+      "desc": "High-purity hydrogen for industrial processes, research laboratories, and specialised applications."
+    },
+    "carbondioxide": {
+      "desc": "mostly used as a refrigerant or coolant, also used in manufacturing, in chemical industry, in metalworking, in health care, when added to medical-grade oxygen, CO₂ can help stimulate respiration."
+    },
+    "argon": {
+      "desc": "mostly used as a refrigerant or coolant"
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Get In Touch",
+      "subtitle": "We're here to help. Send us your inquiry and we'll respond promptly."
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your full name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+977 98XXXXXXXX",
+      "company": "Company Name",
+      "companyPlaceholder": "Hospital / Company name",
+      "gasType": "Gas Type of Interest",
+      "gasTypePlaceholder": "Select gas type",
+      "requirement": "Requirement Type",
+      "requirementPlaceholder": "Select requirement",
+      "message": "Message (Optional)",
+      "messagePlaceholder": "Additional details about your requirement...",
+      "submit": "Submit Inquiry",
+      "required": "Required",
+      "success": "Inquiry submitted successfully! We'll get back to you soon.",
+      "error": "Something went wrong. Please try again or call us directly.",
+      "gasOptions": {
+        "argon": "Argon",
+        "carbondioxide": "Carbondixide",
+        "hydrogen": "Hydrogen",
+        "nitrogen": "Nitrogen",
+        "oxygen": "Oxygen",
+        "other": "Other",
+        "inquire": "Inquire"
+      },
+      "requirementOptions": {
+        "rent": "Rent",
+        "sale": "Sale",
+        "both": "Both"
+      }
+    },
+    "info": {
+      "title": "Contact Information",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "phoneValue": "+977-9858030326",
+      "emailValue": "info@hooxygen.com.np",
+      "addressValue": "Parashpur-17, Nepalgunj, Banke"
+    },
+    "map": {
+      "title": "Our Location"
+    }
+  },
+  "faq": {
+    "hero": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Find answers to the most common questions about our products and services."
+    },
+    "categories": {
+      "all": "All",
+      "safety": "Safety",
+      "ordering": "Ordering",
+      "delivery": "Delivery",
+      "rental": "Rental",
+      "payment": "Payment",
+      "emergency": "Emergency"
+    },
+    "noResults": "No questions found for this category."
+  },
+  "footer": {
+    "links": {
+      "faq": "FAQ",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "sitemap": "Sitemap"
+    },
+    "contact": {
+      "title": "Contact Us"
+    },
+    "legal": {
+      "title": "Legal"
+    },
+    "location": {
+      "title": "Find Us"
+    },
+    "copyright": "© {{year}} HO Oxygen Industries Pvt. Ltd. All rights reserved."
+  },
+  "common": {
+    "comingSoon": "Coming soon",
+    "learnMore": "Learn More",
+    "contactUs": "Contact Us",
+    "loading": "Loading...",
+    "available": "Available",
+    "notAvailable": "Not Available"
+  }
+}
