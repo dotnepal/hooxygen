@@ -12,6 +12,7 @@ destination_address = "info@hooxygen.com.np"
 
 [observability]
 enabled = true
+head_sampling_rate = 1
 
 [observability.logs]
 enabled = true
