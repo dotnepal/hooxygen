@@ -95,7 +95,7 @@ function ContactForm() {
   } = useForm<ContactFormData>()
 
   const onSubmit = async (data: ContactFormData) => {
-    try {
+    // try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -107,10 +107,10 @@ function ContactForm() {
       } else {
         setStatus('error')
       }
-    } catch(error: any) {
-      console.log(error);
-      setStatus('error')
-    }
+    // } catch(error: any) {
+    //   console.log(error);
+    //   setStatus('error')
+    // }
   }
 
   return (
