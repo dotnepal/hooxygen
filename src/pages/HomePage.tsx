@@ -31,7 +31,7 @@ function HomeHero() {
       className="relative overflow-hidden"
       style={{
         background:
-          'linear-gradient(135deg, var(--color-brand-dark) 0%, var(--color-brand-blue) 60%, var(--color-brand-accent) 100%)',
+          'linear-gradient(135deg, var(--color-brand-dark) 0%, var(--color-brand-blue) 100%)',
         clipPath: 'polygon(0 0, 100% 0, 100% 90%, 0 100%)',
         paddingBottom: 'clamp(4rem, 10vw, 7rem)',
       }}
@@ -282,7 +282,7 @@ function CTABanner() {
             as="a"
             href="/contact"
             size="lg"
-            className="text-brand-blue hover:bg-brand-light border-0 shadow-lg bg-teal-700 hover:bg-teal-900"
+            className="text-white border-0 shadow-lg bg-teal-700 hover:bg-teal-900"
           >
             {t('home.cta.button')}
           </Button>

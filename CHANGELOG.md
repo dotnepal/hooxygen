@@ -4,6 +4,46 @@ All notable changes to the HO Oxygen website are recorded here in reverse-chrono
 
 ---
 
+## 2026-04-14 — Post-launch cleanup: legal links removed, mobile nav trimmed, WCAG 2.2 SC 1.4.3 fully resolved
+
+### Legal links removed from footer
+
+**Affected files:** `src/components/layout/Footer.tsx`, `src/i18n/en.json`, `src/i18n/np.json`
+
+- Removed Privacy Policy, Terms of Service, and Sitemap links from the footer middle column
+- Removed the "Legal" section heading
+- Middle column now contains only Quick Links (Services, Contact, Products)
+- Removed `footer.links.privacy`, `footer.links.terms`, `footer.links.sitemap`, and `footer.legal.title` i18n keys from both language files
+
+### Mobile nav trimmed
+
+**Affected file:** `src/components/layout/Navbar.tsx`
+
+- Removed "Contact Us" CTA button from the mobile dropdown panel
+- Removed Language toggle from the mobile dropdown panel
+- The Language toggle remains visible in the desktop header bar (all screen sizes)
+
+### WCAG 2.2 SC 1.4.3 — All contrast failures resolved
+
+Full audit performed across all pages and components. Two rounds of fixes applied.
+
+**Round 1 fixes:**
+- `ContactPage.tsx` — Required field `*` indicator: `text-brand-accent` → `text-red-600` (3.68:1 → 4.63:1)
+- `ContactPage.tsx` — Placeholder text: `placeholder:text-gray-400` → `placeholder:text-gray-600` (2.54:1 → 6.93:1)
+- `ServicesPage.tsx` — CTA subtitle on brand-light bg: `text-brand-steel` → `text-brand-dark` (4.37:1 → 11.50:1)
+- `ProductsPage.tsx` — Services section desc on brand-light bg: `text-brand-steel` → `text-brand-dark` (4.37:1 → 11.50:1)
+- `ProductsPage.tsx` — Unavailable badges: `text-gray-400` → `text-gray-600` (2.31:1 → 6.32:1)
+
+**Round 2 fixes (comprehensive audit):**
+- `SectionHeader.tsx` — Eyebrow label (text-xs): `text-brand-accent` → `text-brand-blue` (3.68:1 → 8.72:1)
+- `ProductsPage.tsx` — Desktop table ✗ marks: `text-gray-300` → `text-gray-600` (1.47:1 → 6.61:1)
+- `Footer.tsx` — Copyright text: `text-white/50` → `text-white/60` (4.14:1 → 5.25:1)
+- `PageHero.tsx` — Gradient: removed `brand-accent 100%` stop (even pure white failed on brand-accent at 3.68:1); gradient now ends at `brand-blue 100%` — white/75 subtitle now 5.64:1 ✓
+- `HomePage.tsx` — HomeHero gradient: same fix as PageHero
+- `HomePage.tsx` — CTA button: `text-brand-blue` on teal bg → `text-white` (1.59:1 → 4.98:1)
+
+---
+
 ## 2026-03-30 — CLAUDE.md stale spec fixes + typo corrections
 
 ### Stale content corrected

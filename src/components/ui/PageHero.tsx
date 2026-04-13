@@ -34,7 +34,7 @@ export default function PageHero({
       className={`relative overflow-hidden ${className}`}
       style={{
         background:
-          'linear-gradient(135deg, var(--color-brand-dark) 0%, var(--color-brand-blue) 60%, var(--color-brand-accent) 100%)',
+          'linear-gradient(135deg, var(--color-brand-dark) 0%, var(--color-brand-blue) 100%)',
         clipPath: 'polygon(0 0, 100% 0, 100% 88%, 0 100%)',
         paddingBottom: 'clamp(3rem, 8vw, 6rem)',
       }}

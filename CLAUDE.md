@@ -1,12 +1,12 @@
-**Date:** March 30, 2026
+**Date:** April 14, 2026
 
 **Project:** Informational Website for Gas Refilling Factory
 
 **Purpose:** Build brand trust, showcase services, and generate sales leads
 
-**Current State:** Phase 2 COMPLETE — F-001 through F-016 complete (including F-014 Deploy). All pages live, CI/CD pipeline wired. Post-launch cleanup in progress. Ready for Phase 3 (backend integration / production launch).
+**Current State:** Phase 2 COMPLETE — F-001 through F-016 complete (including F-014 Deploy). All pages live, CI/CD pipeline wired. Post-launch cleanup done (legal links removed, mobile nav trimmed, WCAG 2.2 SC 1.4.3 fully resolved). Ready for Phase 3 (backend integration / production launch).
 
-**Repository Contents (as of 2026-03-30):**
+**Repository Contents (as of 2026-04-14):**
 - `CLAUDE.md` — project specification and workflow rules (this file)
 - `CHANGELOG.md` — full history of changes, bug fixes, and feature completions
 - `tasks/1-FEATURES.md` — feature breakdown with ASCII wireframes and task items (F-001 to F-016, all complete)
@@ -94,9 +94,7 @@ See `tasks/1-FEATURES.md` for full ASCII wireframes.
 ### Left
     - Contact details (phone + address; email hidden until corrected)
 ### Middle
-    - privacy
-    - terms
-    - sitemap
+    - Quick Links (Services, Contact, Products)
 ### Right
     - Google map on the right side
 

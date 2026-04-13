@@ -38,7 +38,7 @@ export default function SectionHeader({
   return (
     <div className={`flex flex-col gap-3 ${alignClass} ${className}`}>
       {eyebrow && (
-        <span className="text-xs font-body font-semibold tracking-widest uppercase text-brand-accent">
+        <span className="text-xs font-body font-semibold tracking-widest uppercase text-brand-blue">
           {eyebrow}
         </span>
       )}

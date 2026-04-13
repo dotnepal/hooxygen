@@ -194,10 +194,10 @@ function GasTabs() {
                     <td className="px-5 py-4 font-semibold text-brand-dark">{row.size}</td>
                     <td className="px-5 py-4 text-brand-steel">{row.capacity}</td>
                     <td className="px-5 py-4">
-                      {row.rent ? <span className="font-bold text-emerald-600">✓</span> : <span className="text-gray-300">✗</span>}
+                      {row.rent ? <span className="font-bold text-emerald-600">✓</span> : <span className="text-gray-600">✗</span>}
                     </td>
                     <td className="px-5 py-4">
-                      {row.sale ? <span className="font-bold text-emerald-600">✓</span> : <span className="text-gray-300">✗</span>}
+                      {row.sale ? <span className="font-bold text-emerald-600">✓</span> : <span className="text-gray-600">✗</span>}
                     </td>
                     <td className="px-5 py-4">
                       <Button as="a" href="/contact" variant="outline" size="sm">

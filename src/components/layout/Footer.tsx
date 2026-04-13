@@ -145,7 +145,7 @@ export default function Footer() {
 
         {/* ── Copyright bar ─────────────────────────────────────────────── */}
         <div className="border-t border-white/10 mt-10 pt-6">
-          <p className="text-center text-sm text-white/50">
+          <p className="text-center text-sm text-white/60">
             {t('footer.copyright', { year })}
           </p>
         </div>
