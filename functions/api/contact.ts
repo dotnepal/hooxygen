@@ -72,6 +72,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     message: data.message?.trim() ?? '(no message)',
   }
 
+  // After payload construction, before calling mailer
+  if (!env.CONTACT_MAILER) {
+    console.error('CONTACT_MAILER service binding is not configured')
+    return Response.json(
+      { success: false, error: 'Service not configured. Please call us directly.' },
+      { status: 503 },
+    )
+  }
+
   const mailerResponse = await env.CONTACT_MAILER.fetch('https://contact-mailer.internal/send', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
