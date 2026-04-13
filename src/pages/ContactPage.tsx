@@ -107,7 +107,8 @@ function ContactForm() {
       } else {
         setStatus('error')
       }
-    } catch {
+    } catch(error: any) {
+      console.log({ error });
       setStatus('error')
     }
   }
