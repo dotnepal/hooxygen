@@ -9,3 +9,11 @@ CONTACT_RECIPIENT_EMAIL = "info@hooxygen.com.np"
 [[send_email]]
 name = "CONTACT_EMAIL"
 destination_address = "info@hooxygen.com.np"
+
+[observability]
+[observability.logs]
+enabled = false
+invocation_logs = true
+
+[observability.traces]
+enabled = false
