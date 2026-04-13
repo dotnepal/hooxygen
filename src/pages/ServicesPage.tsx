@@ -249,7 +249,7 @@ export default function ServicesPage() {
           <h2 className="font-display font-bold text-brand-dark text-3xl sm:text-4xl leading-tight">
             {t('services.cta.title')}
           </h2>
-          <p className="mt-4 font-body text-brand-steel text-base sm:text-lg">
+          <p className="mt-4 font-body text-brand-dark text-base sm:text-lg">
             {t('services.cta.subtitle')}
           </p>
           <div className="mt-8">

@@ -155,13 +155,13 @@ function GasTabs() {
                 <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
                   <span className={[
                     'flex items-center gap-1 px-3 py-1 rounded-full text-xs font-body font-medium',
-                    row.rent ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-400',
+                    row.rent ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600',
                   ].join(' ')}>
                     {row.rent ? '✓' : '✗'} {t('products.table.rent')}
                   </span>
                   <span className={[
                     'flex items-center gap-1 px-3 py-1 rounded-full text-xs font-body font-medium',
-                    row.sale ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-400',
+                    row.sale ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600',
                   ].join(' ')}>
                     {row.sale ? '✓' : '✗'} {t('products.table.sale')}
                   </span>
@@ -246,7 +246,7 @@ function ServicesSection() {
                 <h3 className="text-lg font-display font-bold text-brand-dark">
                   {t(`products.services.${key}.title`)}
                 </h3>
-                <p className="mt-1 font-body text-sm text-brand-steel leading-relaxed">
+                <p className="mt-1 font-body text-sm text-brand-dark leading-relaxed">
                   {t(`products.services.${key}.desc`)}
                 </p>
               </div>

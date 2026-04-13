@@ -115,23 +115,14 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ── Middle: Legal + Quick links ──────────────────────────────── */}
+          {/* ── Middle: Quick links ──────────────────────────────── */}
           <div>
-            <FooterHeading>{t('footer.legal.title')}</FooterHeading>
+            <FooterHeading>Quick Links</FooterHeading>
             <ul className="space-y-2">
-              <FooterLink to="/privacy">{t('footer.links.privacy')}</FooterLink>
-              <FooterLink to="/terms">{t('footer.links.terms')}</FooterLink>
-              <FooterLink to="/sitemap">{t('footer.links.sitemap')}</FooterLink>
+              <FooterLink to="/services">{t('nav.services')}</FooterLink>
+              <FooterLink to="/contact">{t('nav.contact')}</FooterLink>
+              <FooterLink to="/products">{t('nav.products')}</FooterLink>
             </ul>
-
-            <div className="mt-6">
-              <FooterHeading>Quick Links</FooterHeading>
-              <ul className="space-y-2">
-                <FooterLink to="/services">{t('nav.services')}</FooterLink>
-                <FooterLink to="/contact">{t('nav.contact')}</FooterLink>
-                <FooterLink to="/products">{t('nav.products')}</FooterLink>
-              </ul>
-            </div>
           </div>
 
           {/* ── Right: Google Map ─────────────────────────────────────────── */}

@@ -230,16 +230,10 @@
   },
   "footer": {
     "links": {
-      "faq": "FAQ",
-      "privacy": "Privacy Policy",
-      "terms": "Terms of Service",
-      "sitemap": "Sitemap"
+      "faq": "FAQ"
     },
     "contact": {
       "title": "Contact Us"
-    },
-    "legal": {
-      "title": "Legal"
     },
     "location": {
       "title": "Find Us"

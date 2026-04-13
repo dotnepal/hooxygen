@@ -40,7 +40,7 @@ function inputClass(hasError: boolean) {
   return [
     'w-full rounded-lg border px-4 py-3 font-body text-sm bg-white',
     'focus:outline-none focus:ring-2 focus:ring-brand-accent focus:border-transparent',
-    'transition-colors placeholder:text-gray-400',
+    'transition-colors placeholder:text-gray-600',
     hasError ? 'border-red-400' : 'border-gray-200',
   ].join(' ')
 }
@@ -121,7 +121,7 @@ function ContactForm() {
       {/* Name */}
       <div>
         <label htmlFor="name" className="block font-body font-medium text-brand-dark text-sm mb-1">
-          {t('contact.form.name')} <span className="text-brand-accent" aria-hidden="true">*</span>
+          {t('contact.form.name')} <span className="text-red-600" aria-hidden="true">*</span>
         </label>
         <input
           id="name"
@@ -142,7 +142,7 @@ function ContactForm() {
       {/* Email */}
       <div>
         <label htmlFor="email" className="block font-body font-medium text-brand-dark text-sm mb-1">
-          {t('contact.form.email')} <span className="text-brand-accent" aria-hidden="true">*</span>
+          {t('contact.form.email')} <span className="text-red-600" aria-hidden="true">*</span>
         </label>
         <input
           id="email"
@@ -166,7 +166,7 @@ function ContactForm() {
       {/* Phone */}
       <div>
         <label htmlFor="phone" className="block font-body font-medium text-brand-dark text-sm mb-1">
-          {t('contact.form.phone')} <span className="text-brand-accent" aria-hidden="true">*</span>
+          {t('contact.form.phone')} <span className="text-red-600" aria-hidden="true">*</span>
         </label>
         <input
           id="phone"
@@ -187,7 +187,7 @@ function ContactForm() {
       {/* Company */}
       <div>
         <label htmlFor="company" className="block font-body font-medium text-brand-dark text-sm mb-1">
-          {t('contact.form.company')} <span className="text-brand-accent" aria-hidden="true">*</span>
+          {t('contact.form.company')} <span className="text-red-600" aria-hidden="true">*</span>
         </label>
         <input
           id="company"

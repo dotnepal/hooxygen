@@ -235,20 +235,6 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Divider + CTA + language row */}
-          <div className="border-t border-slate-100 mx-3 mt-1 mb-3 pt-3 flex items-center justify-between gap-3">
-            <Button
-              as="a"
-              href="/contact"
-              size="sm"
-              variant="primary"
-              className="flex-1 justify-center"
-              onClick={closeDropdown}
-            >
-              {t('common.contactUs')}
-            </Button>
-            <LanguageToggle />
-          </div>
         </div>
       </nav>
 
