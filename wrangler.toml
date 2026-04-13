@@ -1,4 +1,4 @@
-"$schema" = "./node_modules/wrangler/config-schema.json"
+#"$schema" = "./node_modules/wrangler/config-schema.json"
 name = "hooxygen"
 compatibility_date = "2026-03-01"
 pages_build_output_dir = "./dist"
@@ -6,6 +6,3 @@ pages_build_output_dir = "./dist"
 [vars]
 VITE_FORM_ENDPOINT = "/api/contact"
 NODE_VERSION="22.16.0"
-
-# Runtime secrets — set in Cloudflare Pages dashboard, NOT here:
-#   WEB3FORMS_KEY — Web3Forms API key (used server-side by functions/api/contact.ts)

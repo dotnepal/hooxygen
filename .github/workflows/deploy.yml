@@ -51,7 +51,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: workers/contact-mailer
+          workingDirectory: "workers/contact-mailer"
           command: deploy
 
       - name: Deploy to Cloudflare Pages
@@ -59,4 +59,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=ho-gas-factory
+          workingDirectory: "."
+          command: |
+            pages project list
+            pages deploy dist --project-name=ho-gas-factory
