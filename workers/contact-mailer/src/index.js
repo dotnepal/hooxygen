@@ -66,6 +66,8 @@ function buildRawEmail(data, sender, recipient) {
 
 export default {
   async fetch(request, env) {
+    console.log("received request to send email, processing it");
+
     if (request.method !== 'POST') {
       return json({ success: false, error: 'Method not allowed' }, { status: 405 })
     }
@@ -114,12 +116,20 @@ export default {
     )
 
     try {
+      console.log("sending email to ", recipient);
       const message = new EmailMessage(sender, recipient, rawMessage)
       await env.CONTACT_EMAIL.send(message)
+      console.log("email sent successfully", recipient);
       return json({ success: true })
     } catch (error) {
       console.error('Email send failed', error)
-      return json({ success: false, error: 'Cloudflare email send failed' }, { status: 502 })
+      return json({
+	success: false, 
+	error: 'Cloudflare email send failed' 
+      }, 
+      { 
+	status: 502 
+      })
     }
   },
 }
