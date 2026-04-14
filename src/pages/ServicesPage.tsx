@@ -13,15 +13,11 @@ export const ssgOptions: SsgOptions = {
   Head: () => (
     <>
       <title>Our Services — HO Oxygen</title>
-      <meta
-        name="description"
-        content="HO Oxygen offers cylinder rental, sales, refilling, bulk orders, same-day delivery, and customer pickup across Nepal."
-      />
       {generatePageHead({
         title: 'Our Services — HO Oxygen',
         description: 'HO Oxygen offers cylinder rental, sales, refilling, bulk orders, same-day delivery, and customer pickup across Nepal.',
         url: '/services',
-        keywords: 'gas delivery Nepal, cylinder refill, bulk orders, rental, sales',
+        keywords: 'gas delivery Nepal, cylinder refill, bulk orders, rental, sales, Nepalgunj delivery, same-day gas delivery, cylinder pickup',
       })}
       {generateStructuredData()}
     </>

@@ -11,15 +11,11 @@ export const ssgOptions: SsgOptions = {
   Head: () => (
     <>
       <title>HO Oxygen Industries Pvt. Ltd. — Reliable Gas Supply for Medical & Industrial Use across Nepal</title>
-      <meta
-        name="description"
-        content="HO Oxygen Industries Pvt. Ltd. provides reliable oxygen, nitrogen, and hydrogen gas supply for hospitals, medical facilities, and industrial users across Nepal."
-      />
       {generatePageHead({
         title: 'HO Oxygen Industries Pvt. Ltd. — Reliable Gas Supply for Medical & Industrial Use across Nepal',
         description: 'HO Oxygen Industries Pvt. Ltd. provides reliable oxygen, nitrogen, and hydrogen gas supply for hospitals, medical facilities, and industrial users across Nepal.',
         url: '/',
-        keywords: 'oxygen supply Nepal, gas cylinders, medical gas, nitrogen, hydrogen',
+        keywords: 'HO Oxygen Industries, oxygen supply Nepal, gas cylinders, medical gas, nitrogen, hydrogen, Nepalgunj gas supplier, Banke district',
       })}
       {generateStructuredData()}
     </>
@@ -87,7 +83,8 @@ function HomeHero() {
         <div className="hidden lg:flex justify-center">
           <img
             src={HOHeroImage}
-            alt="HO Oxygen facility"
+            alt="HO Oxygen Industries gas production facility in Nepalgunj, Nepal"
+            loading="eager"
             className="rounded-2xl shadow-2xl"
             width={747}
             height={420}
@@ -258,6 +255,7 @@ function TrustGallery() {
               <img
                 src={img.src}
                 alt={img.alt}
+                loading="lazy"
                 width={400}
                 height={280}
                 className="w-full h-52 object-cover"

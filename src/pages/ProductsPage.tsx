@@ -12,15 +12,11 @@ export const ssgOptions: SsgOptions = {
   Head: () => (
     <>
       <title>Products & Services — HO Oxygen</title>
-      <meta
-        name="description"
-        content="Explore oxygen, nitrogen, and hydrogen gas cylinders available for rent and sale. Refilling, bulk orders, and delivery services across Nepal."
-      />
       {generatePageHead({
         title: 'Products & Services — HO Oxygen',
         description: 'Explore oxygen, nitrogen, and hydrogen gas cylinders available for rent and sale. Refilling, bulk orders, and delivery services across Nepal.',
         url: '/products',
-        keywords: 'oxygen cylinder, nitrogen gas, CO₂ supply Nepal, gas cylinders',
+        keywords: 'oxygen cylinder, nitrogen gas, CO₂ supply, CO2 supply Nepal, argon gas Nepal, industrial gas cylinders',
       })}
       {generateStructuredData()}
     </>

@@ -11,15 +11,11 @@ export const ssgOptions: SsgOptions = {
   Head: () => (
     <>
       <title>Contact Us — HO Oxygen Industries Pvt. Ltd.</title>
-      <meta
-        name="description"
-        content="Get in touch with HO Oxygen Industries Pvt. Ltd. to place a gas order, request a quote, or ask about our services."
-      />
       {generatePageHead({
         title: 'Contact Us — HO Oxygen Industries Pvt. Ltd.',
         description: 'Get in touch with HO Oxygen Industries Pvt. Ltd. to place a gas order, request a quote, or ask about our services.',
         url: '/contact',
-        keywords: 'contact us, gas inquiry, order cylinders Nepal',
+        keywords: 'contact us, gas inquiry, order cylinders Nepal, Nepalgunj, gas supplier contact, HO Oxygen phone',
       })}
       {generateStructuredData()}
     </>

@@ -11,15 +11,11 @@ export const ssgOptions: SsgOptions = {
   Head: () => (
     <>
       <title>About Us — HO Oxygen</title>
-      <meta
-        name="description"
-        content="Learn about HO Oxygen — our story, team, and commitment to safe, reliable gas supply across Nepal."
-      />
       {generatePageHead({
         title: 'About Us — HO Oxygen',
         description: 'Learn about HO Oxygen — our story, team, and commitment to safe, reliable gas supply across Nepal.',
         url: '/about',
-        keywords: 'HO Oxygen, gas company Nepal, service areas, about us',
+        keywords: 'HO Oxygen, gas company Nepal, service areas, Nepalgunj, Parashpur, Banke district, Lumbini province',
       })}
       {generateStructuredData()}
     </>
@@ -71,7 +67,8 @@ function CompanyStory() {
         <div className="hidden lg:block">
           <img
             src={hoOxygenAbout}
-            alt="HO Oxygen facility"
+            alt="HO Oxygen Industries storage and operations facility"
+            loading="lazy"
             width={540}
             height={380}
             className="rounded-2xl shadow-card w-full object-cover"
