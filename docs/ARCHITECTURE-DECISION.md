@@ -92,7 +92,7 @@ This is a **greenfield static informational website** for HO Oxygen in Nepal. As
 ```
 
 **Request flow for a page visit:**
-1. User visits `https://hogasfactory.com/about`
+1. User visits `https://hooxygen.com.np/about`
 2. Cloudflare CDN serves `about/index.html` from the nearest edge node (pre-rendered HTML, fully parseable without JS)
 3. Browser downloads the JS bundle → React hydrates the existing DOM (no re-render from scratch)
 4. i18n initializes: `i18next-browser-languagedetector` reads `localStorage` → if Nepali, swaps all strings client-side
@@ -896,18 +896,18 @@ pages_build_output_dir = "dist"
 ```
 User-agent: *
 Allow: /
-Sitemap: https://hogasfactory.com/sitemap.xml
+Sitemap: https://hooxygen.com.np/sitemap.xml
 ```
 
 **`public/sitemap.xml`:**
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://hogasfactory.com/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://hogasfactory.com/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hogasfactory.com/products</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hogasfactory.com/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://hogasfactory.com/faq</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hooxygen.com.np/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://hooxygen.com.np/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hooxygen.com.np/products</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://hooxygen.com.np/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hooxygen.com.np/faq</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
 ```
 

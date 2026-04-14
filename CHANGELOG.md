@@ -86,7 +86,7 @@ Full audit performed across all pages and components. Two rounds of fixes applie
 
 ### Email hidden from all pages
 
-Email `info@hogasfactory.com.np` temporarily hidden until updated with correct address.
+Email `info@hooxygen.com.np` temporarily hidden until updated with correct address.
 
 - **Footer**: removed `<ContactItem icon={EmailIcon} ...>` email row from contact details
 - **ContactPage** (`src/pages/ContactPage.tsx`): removed email entry from the contact info items array

@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.hogasfactory.com.np/sitemap.xml
+Sitemap: https://www.hooxygen.com.np/sitemap.xml

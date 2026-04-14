@@ -38,7 +38,7 @@ User fills form
 2. Click **Add widget**.
 3. Fill in:
    - **Name:** `ho-gas-factory-contact`
-   - **Hostname:** your Pages domain (e.g. `ho-gas-factory.pages.dev` and/or `hogasfactory.com.np`)
+   - **Hostname:** your Pages domain (e.g. `ho-gas-factory.pages.dev` and/or `hooxygen.com.np`)
    - **Widget type:** `Managed` (recommended — CF decides whether to show checkbox)
 4. Copy the **Site Key** (public) and **Secret Key** (private).
 

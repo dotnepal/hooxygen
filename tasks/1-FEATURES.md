@@ -245,7 +245,7 @@
 - [x] Semantic HTML throughout — `<main>`, `<section aria-label>`, `<aside>`, `<article>`, `<figure>`, `role="tablist/tab/tabpanel"`, `role="region"`, `role="alert"` audited across all pages
 - [x] `alt` text on all images — all `<img>` tags carry descriptive alt text; decorative SVGs use `aria-hidden="true"`
 - [x] `lang` attribute switches with i18n (`en` / `ne`)
-- [x] `public/robots.txt` — corrected domain to `hogasfactory.com.np`; `public/sitemap.xml` created with all 5 routes and priorities
+- [x] `public/robots.txt` — corrected domain to `hooxygen.com.np`; `public/sitemap.xml` created with all 5 routes and priorities
 
 ### F-012: Animations & Polish ✓ COMPLETE (2026-03-27)
 - [x] Scroll-triggered fade-in + slide-up — `useScrollAnimation` hook (`src/hooks/useScrollAnimation.ts`) uses IntersectionObserver; CSS `fadeSlideUp` keyframe; applied to all sections in Home, About, Products pages; respects `prefers-reduced-motion`
