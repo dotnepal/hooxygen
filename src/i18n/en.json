@@ -68,7 +68,7 @@
     "sale": { "title": "Cylinder Sales", "desc": "Purchase cylinders outright for permanent ownership and peace of mind." },
     "refilling": { "title": "Cylinder Refilling", "desc": "Fast, safe refilling of your existing cylinders — bring yours or use ours." },
     "bulk": { "title": "Bulk Orders", "desc": "High-volume supply contracts for hospitals, clinics, and industrial facilities." },
-    "delivery": { "title": "Same-Day Delivery", "desc": "Local delivery within the Kathmandu valley on the same business day." },
+    "delivery": { "title": "Same-Day Delivery", "desc": "Local delivery within Nepalgunj on the same business day." },
     "pickup": { "title": "Customer Pickup", "desc": "Pick up directly at our facility at your convenience — no appointment needed." },
     "cta": {
       "title": "Ready to place an order?",
@@ -78,12 +78,12 @@
   },
   "about": {
     "hero": {
-      "title": "About HO Oxygen",
+      "title": "About HO Oxygen Industries Pvt. Ltd.",
       "subtitle": "Our story, mission, and commitment to safe gas supply across Nepal."
     },
     "story": {
       "title": "Our Story",
-      "body": "HO Oxygen has been providing safe, reliable gas supply to hospitals, clinics, and industrial users across Nepal. Our commitment to quality and safety drives everything we do."
+      "body": "HO Oxygen Industries Pvt. Ltd. has been providing safe, reliable gas supply to hospitals, clinics, and industrial users across Nepal. Our commitment to quality and safety drives everything we do. We are among few oxygen factories operating in Nepal during covid-19 pandemic and have been a lifeline for many healthcare providers during this critical time."
     },
     "team": {
       "title": "Our Team"
@@ -113,10 +113,10 @@
     },
     "tabs": {
       "oxygen": "Oxygen",
-      "nitrogen": "Nitrogen",
-      "hydrogen": "Hydrogen",
+      "argon": "Argon",
       "carbondioxide": "Carbondioxide",
-      "argon": "Argon"
+      "hydrogen": "Hydrogen",
+      "nitrogen": "Nitrogen"
     },
     "table": {
       "size": "Size",

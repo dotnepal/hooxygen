@@ -46,7 +46,7 @@ export const FAQ_DATA: readonly FaqItem[] = [
     category: 'delivery',
     question: 'What are your delivery timeframes?',
     answer:
-      'We offer same-day delivery within the Kathmandu Valley for orders placed before noon. Regional deliveries (outside the valley) typically take 2–4 business days. National deliveries to remote areas may take up to 7 days. Contact us for a precise estimate.',
+      'We offer same-day delivery within Nepalgunj for orders placed before noon. Regional deliveries (Banke, Bardiya, and surrounding districts) typically take 2–4 business days. National deliveries to remote areas may take up to 7 days. Contact us for a precise estimate.',
   },
   {
     id: 6,

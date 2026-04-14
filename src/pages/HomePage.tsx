@@ -126,7 +126,13 @@ const GAS_ICONS = {
 
 function GasHighlights() {
   const { t } = useTranslation()
-  const gases = ['oxygen', 'nitrogen', 'hydrogen', 'carbondioxide', 'argon'] as const
+  const gases = [
+    'oxygen', 
+    'argon',
+    'carbondioxide', 
+    'hydrogen', 
+    'nitrogen', 
+  ] as const
   const headerRef = useScrollAnimation<HTMLDivElement>()
   const gridRef = useScrollAnimation<HTMLDivElement>({ stagger: 120 })
 

@@ -30,22 +30,9 @@ export const PRODUCTS: readonly GasProduct[] = [
       { size: 'Big',  capacity: '47 L',  weight: '15 kg', rent: true,  sale: true  },
     ],
   },
+
   {
-    key: 'nitrogen',
-    useCases: [
-      'Industrial manufacturing',
-      'Food packaging & preservation',
-      'Laboratory & research',
-      'Metal fabrication',
-    ],
-    cylinders: [
-      { size: 'Small',  capacity: '10 L', weight: '3 kg',  rent: true,  sale: true  },
-      { size: 'Medium',  capacity: '25 L',   weight: '8 kg',  rent: true,  sale: true  },
-      { size: 'Big',  capacity: '47 L',  weight: '15 kg', rent: true,  sale: true  },
-    ],
-  },
-  {
-    key: 'hydrogen',
+    key: 'argon',
     useCases: [
       'Industrial processes',
       'Research & laboratories',
@@ -72,8 +59,9 @@ export const PRODUCTS: readonly GasProduct[] = [
       { size: 'Big',  capacity: '47 L',  weight: '15 kg', rent: true,  sale: true  },
     ],
   },
+
   {
-    key: 'argon',
+    key: 'hydrogen',
     useCases: [
       'Industrial processes',
       'Research & laboratories',
@@ -85,5 +73,19 @@ export const PRODUCTS: readonly GasProduct[] = [
       { size: 'Medium',  capacity: '25 L',   weight: '8 kg',  rent: true,  sale: true  },
       { size: 'Big',  capacity: '47 L',  weight: '15 kg', rent: true,  sale: true  },
     ],
-  }
+  },
+  {
+    key: 'nitrogen',
+    useCases: [
+      'Industrial manufacturing',
+      'Food packaging & preservation',
+      'Laboratory & research',
+      'Metal fabrication',
+    ],
+    cylinders: [
+      { size: 'Small',  capacity: '10 L', weight: '3 kg',  rent: true,  sale: true  },
+      { size: 'Medium',  capacity: '25 L',   weight: '8 kg',  rent: true,  sale: true  },
+      { size: 'Big',  capacity: '47 L',  weight: '15 kg', rent: true,  sale: true  },
+    ],
+  },
 ]
