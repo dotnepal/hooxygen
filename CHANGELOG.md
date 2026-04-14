@@ -162,7 +162,7 @@ Flag emoji is wrapped in `aria-hidden="true"` span so screen readers use only th
 
 **Files added:**
 - `.github/workflows/deploy.yml` — CI/CD pipeline: build job on all PRs (CI check), deploy job on push to `main`
-- `tasks/DEPLOY.md` — deployment runbook (secrets, env vars, manual deploy, rollback procedure)
+- `runbooks/DEPLOY.md` — deployment runbook (secrets, env vars, manual deploy, rollback procedure)
 
 **Workflow behavior:**
 - Build job: `npm ci` → `npm run build` (with `VITE_FORM_ENDPOINT=/api/contact`) → uploads `dist/` artifact
@@ -170,7 +170,6 @@ Flag emoji is wrapped in `aria-hidden="true"` span so screen readers use only th
 
 **Required setup (one-time):**
 - `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` → GitHub repo secrets
-- `WEB3FORMS_KEY` → Cloudflare Pages dashboard (Production environment variable)
 
 ### F-016: Standard Main Menu & Services Page
 

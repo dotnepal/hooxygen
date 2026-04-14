@@ -1,6 +1,6 @@
 # HO Oxygen — Deployment Specification
 
-**Last updated:** 2026-03-28
+**Last updated:** 2026-0414-
 
 ---
 
@@ -69,18 +69,6 @@ Set in **CF Dashboard → Pages → ho-gas-factory → Settings → Environment 
 
 | Variable | Environment | Purpose |
 |----------|-------------|---------|
-| `WEB3FORMS_KEY` | Production | API key for Web3Forms email relay (used by `functions/api/contact.ts`) |
-
-> **Note:** `WEB3FORMS_KEY` is a server-side secret used by the Pages Function — it is never exposed to the client. Do not add it to GitHub secrets or the workflow env.
-
----
-
-## How to Get a Web3Forms Key
-
-1. Go to [web3forms.com](https://web3forms.com) and create a free account
-2. Create a new access key for `ho-gas-factory.pages.dev`
-3. Add it as `WEB3FORMS_KEY` in the Cloudflare Pages dashboard (Production environment)
-
 ---
 
 ## Cloudflare Pages Project Setup (One-Time)
@@ -101,6 +89,8 @@ wrangler deploy --config workers/contact-mailer/wrangler.toml
 VITE_FORM_ENDPOINT=/api/contact npm run build
 wrangler pages deploy dist --project-name=ho-gas-factory
 ```
+
+> **NOTE**: Here `ho-gas-factory` must match with name in 'wrangler.toml' at repo root.
 
 After first deploy, subsequent deploys are handled automatically by GitHub Actions.
 
@@ -139,7 +129,7 @@ Alternatively, revert the offending commit on `main` — GitHub Actions will tri
 - [ ] `CLOUDFLARE_ACCOUNT_ID` added to GitHub secrets
 - [ ] Worker `contact-mailer` deployed in the target Cloudflare account
 - [ ] Cloudflare Pages project `ho-gas-factory` created (via first manual deploy or CF dashboard)
-- [ ] Custom domain (`hogasfactory.com.np`) configured in CF Pages → Custom Domains
+- [ ] Custom domain (`hooxygen.com.np`) configured in CF Pages → Custom Domains
 - [ ] SSL certificate provisioned by Cloudflare (automatic once domain is added)
 - [ ] Contact form tested end-to-end on production URL
 

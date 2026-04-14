@@ -17,7 +17,7 @@ The above config should add a new bindings under project (ho-gas-factory) in bin
 
 visit Cloudflare dashboard > Worker & Pages > project (ho-gas-factory)
 
-Under bindings section
+Under bindings section in variable name
 ---
 Binding Name: CONTACT_MAILER
 service-name: contact-mailer

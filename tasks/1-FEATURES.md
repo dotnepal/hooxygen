@@ -268,7 +268,7 @@
 - [x] GitHub Actions: `.github/workflows/deploy.yml` — build on PRs, deploy to Cloudflare Pages on push to `main`
 - [x] `VITE_FORM_ENDPOINT=/api/contact` injected as build-time env var in the workflow
 - [x] Verify clean `dist/` build output (`npm run build` passes, SSG generates all pages)
-> Notes: Two GitHub secrets required (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). `WEB3FORMS_KEY` is a runtime secret set in CF Pages dashboard (never in GH secrets). Full deployment runbook in `tasks/DEPLOY.md`. Build job runs on all PRs as CI check; deploy job runs only on push to `main`.
+> Notes: Two GitHub secrets required (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). `WEB3FORMS_KEY` is a runtime secret set in CF Pages dashboard (never in GH secrets). Full deployment runbook in `runbooks/DEPLOY.md`. Build job runs on all PRs as CI check; deploy job runs only on push to `main`.
 
 ---
 

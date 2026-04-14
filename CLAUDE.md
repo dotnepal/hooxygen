@@ -10,7 +10,7 @@
 - `CLAUDE.md` — project specification and workflow rules (this file)
 - `CHANGELOG.md` — full history of changes, bug fixes, and feature completions
 - `tasks/1-FEATURES.md` — feature breakdown with ASCII wireframes and task items (F-001 to F-016, all complete)
-- `tasks/DEPLOY.md` — deployment specification and runbook (secrets, env vars, manual deploy, rollback)
+- `runbooks/DEPLOY.md` — deployment specification and runbook (secrets, env vars, manual deploy, rollback)
 - `.github/workflows/deploy.yml` — GitHub Actions CI/CD (build on PRs, deploy to CF Pages on main)
 - `tasks/ARCHITECTURE-DECISION.md` — detailed architecture and system design decisions
 - `tasks/lessons.md` — lessons learned during implementation
@@ -56,7 +56,6 @@
 - **Forms:** react-hook-form (client-side validation with inline errors)
 - **Animations:** Motion library (React, formerly Framer Motion) — used selectively for hero staggered reveal and page transitions only; CSS `@keyframes` + Intersection Observer for scroll-triggered effects
 - **Hosting:** Cloudflare Pages (with Pages Functions at `functions/api/contact.ts` for form submission)
-- **Form Fallback:** Web3Forms API (used when Cloudflare Pages Function env var is not configured)
 
 ## Tailwind v4 Note
 Tailwind v4 does NOT use `tailwind.config.ts`. Brand tokens are defined using `@theme` directive in `src/index.css`:
@@ -312,7 +311,7 @@ For each cylinder size, display:
 - **Frontend:** React 19 + TypeScript + Vite 5 + SSG prerender
 - **Styling:** Tailwind CSS v4 (CSS-native @theme config)
 - **Hosting:** Cloudflare Pages
-- **Email/Form:** Cloudflare Pages Functions (`functions/api/contact.ts`) with Web3Forms fallback
+- **Email/Form:** Cloudflare Pages Functions (`functions/api/contact.ts`) + contact-mailer Worker (service binding)
 - **Domain/SSL:** Cloudflare (managed via `wrangler.toml`)
 
 ### 7.3 Accessibility & SEO
@@ -320,7 +319,7 @@ For each cylinder size, display:
 - Mobile-friendly design first
 - Fast loading times
 - Clear metadata and SEO optimization
-- Accessible color contrast and font sizing
+- Accessible color contrast and font sizing, must follow https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
 - Proper heading hierarchy
 
 ---
@@ -330,8 +329,8 @@ For each cylinder size, display:
 **Phase 1:** Design mockups and approval — ✓ COMPLETE (2026-03-27)
 **Phase 2:** Frontend development — ✓ COMPLETE (2026-03-28)
   - F-001 through F-016 all complete — scaffolding, i18n, design system, navbar, footer, all 6 pages, accessibility, animations, responsive design, CI/CD
-  - F-014 ✓ COMPLETE — `.github/workflows/deploy.yml` (build on PRs, deploy to CF Pages on main push); `VITE_FORM_ENDPOINT=/api/contact` injected at build time; deployment runbook at `tasks/DEPLOY.md`
-  - Architecture decisions documented in `tasks/ARCHITECTURE-DECISION.md`
+  - F-014 ✓ COMPLETE — `.github/workflows/deploy.yml` (build on PRs, deploy to CF Pages on main push); `VITE_FORM_ENDPOINT=/api/contact` injected at build time; deployment runbook at `runbooks/DEPLOY.md`
+  - Architecture decisions documented in `docs/ARCHITECTURE-DECISION.md`
 **Phase 3:** Backend integration (contact form, email notifications)
 **Phase 4:** Testing and QA
 **Phase 5:** Deployment and launch
@@ -405,7 +404,7 @@ See `CHANGELOG.md` for the full history of changes, bug fixes, and feature compl
 
 - Use model Sonnet for code writes
 - Use model Haiku for quick tasks, answers
-- Use model opusplan for complex logic reasoning
+- Use model Sonnet for complex logic reasoning
 
 ---
 
