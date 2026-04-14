@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
 import { Button, Card, Badge, SectionHeader } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import HOHeroImage from '../assets/img/ho-heroimage-747x420.jpg'
+import HoHospitalImage from '../assets/img/ho-hospital-400x280.jpg'
 
 export const ssgOptions: SsgOptions = {
   slug: 'index',
@@ -77,11 +79,11 @@ function HomeHero() {
         {/* Hero image placeholder */}
         <div className="hidden lg:flex justify-center">
           <img
-            src="https://placehold.co/520x380/1e3a5f/ffffff?text=HO+Oxygen"
+            src={HOHeroImage}
             alt="HO Oxygen facility"
             className="rounded-2xl shadow-2xl"
-            width={520}
-            height={380}
+            width={747}
+            height={420}
           />
         </div>
       </div>

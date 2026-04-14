@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
 import { Button, Badge, SectionHeader, PageHero } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import hoOxygenAbout from '../assets/img/ho-oxygen-about-540x380.jpg'
 
 export const ssgOptions: SsgOptions = {
   slug: 'about',
@@ -61,7 +62,7 @@ function CompanyStory() {
 
         <div className="hidden lg:block">
           <img
-            src="https://placehold.co/540x380/1e3a5f/ffffff?text=Our+Facility"
+            src={hoOxygenAbout}
             alt="HO Oxygen facility"
             width={540}
             height={380}

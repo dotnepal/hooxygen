@@ -364,7 +364,7 @@ function ContactInfo() {
       <div className="mt-6">
         <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm h-56">
           <iframe
-	    title="HO Oxygen Location — Parashpur, Nepalgunj, Nepal"
+	    title="HO Oxygen Location - Parashpur-17, Nepalgunj, Nepal"
            aria-label="Google Map showing Parashpur, Nepalgunj, Nepal"
 	    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3520.969076166756!2d81.59749289363711!3d28.055968814062695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3998617a96777295%3A0x1c6f18442e6f62eb!2zSE8gT3h5Z2VuIEluZHVzdHJpZXMgUHZ0IEx0ZCDgpI_gpJou4KSTLiDgpIXgpJXgpY3gpLjgpL_gpJzgpKgg4KSH4KSo4KWN4KSh4KS44KWN4KSf4KWN4KSw4KS_4KScIOCkquCljeCksOCkvi4g4KSy4KS_Lg!5e0!3m2!1sen!2sus!4v1774774756092!5m2!1sen!2sus"
             width="100%"
