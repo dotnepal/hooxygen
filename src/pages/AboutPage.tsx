@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
-import { Button, Badge, SectionHeader, PageHero } from '../components/ui'
+import { Button, Badge, SectionHeader, PageHero, PhoneLink } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 import hoOxygenAbout from '../assets/img/ho-oxygen-about-540x380.jpg'
@@ -115,6 +115,35 @@ function ServiceAreas() {
   )
 }
 
+// ─── Call Now CTA ──────────────────────────────────────────────────────────
+
+function CallNowSection() {
+  const { t } = useTranslation()
+  const ref = useScrollAnimation<HTMLDivElement>()
+
+  return (
+    <section
+      aria-label="Call now for assistance"
+      className="py-16 px-6 bg-brand-light"
+    >
+      <div ref={ref} className="animate-on-scroll max-w-4xl mx-auto text-center">
+        <h2 className="font-display font-semibold text-brand-dark text-2xl sm:text-3xl mb-4">
+          {t('cta.questions')}
+        </h2>
+        <p className="font-body text-brand-steel mb-8">
+          {t('cta.callUsToday')}
+        </p>
+        <PhoneLink
+          phone="+9779858030326"
+          display={t('cta.callNow')}
+          className="inline-flex items-center gap-2 px-8 py-4 bg-brand-blue text-white font-display font-semibold rounded-lg hover:bg-brand-dark transition-all hover:shadow-lg text-lg"
+          icon={true}
+        />
+      </div>
+    </section>
+  )
+}
+
 // ─── Page ───────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
@@ -123,6 +152,7 @@ export default function AboutPage() {
       <AboutHero />
       <CompanyStory />
       <ServiceAreas />
+      <CallNowSection />
     </main>
   )
 }

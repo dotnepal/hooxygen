@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { PhoneLink } from '../ui'
 
 // ─── Logo (white variant for dark background) ──────────────────────────────
 
@@ -32,13 +33,13 @@ function FooterLogo() {
 
 // ─── Contact item row ───────────────────────────────────────────────────────
 
-function ContactItem({ icon, text }: { icon: React.ReactNode; text: string }) {
+function ContactItem({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <li className="flex items-start gap-2 text-white/70 text-sm">
       <span className="mt-0.5 shrink-0 text-brand-accent" aria-hidden="true">
         {icon}
       </span>
-      <span>{text}</span>
+      <span>{children}</span>
     </li>
   )
 }
@@ -109,8 +110,14 @@ export default function Footer() {
             <div className="mt-6">
               <FooterHeading>{t('footer.contact.title')}</FooterHeading>
               <ul className="space-y-2">
-                <ContactItem icon={PhoneIcon} text={t('contact.info.phoneValue')} />
-                <ContactItem icon={MapPinIcon} text={t('contact.info.addressValue')} />
+                <ContactItem icon={PhoneIcon}>
+                  <PhoneLink
+                    phone="+9779858030326"
+                    display={t('contact.info.phoneValue')}
+                    className="text-white/70 hover:text-white transition-colors"
+                  />
+                </ContactItem>
+                <ContactItem icon={MapPinIcon}>{t('contact.info.addressValue')}</ContactItem>
               </ul>
             </div>
           </div>

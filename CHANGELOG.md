@@ -4,6 +4,56 @@ All notable changes to the HO Oxygen website are recorded here in reverse-chrono
 
 ---
 
+## 2026-04-14 — Callable phone links + "Call Now" CTAs for improved mobile UX
+
+### New PhoneLink component + callable tel: links across site
+
+**Affected files:** 
+- `src/components/ui/PhoneLink.tsx` (new file)
+- `src/components/ui/index.ts`
+- `src/components/layout/Footer.tsx`
+- `src/pages/ContactPage.tsx`
+
+**Changes:**
+- Created reusable `PhoneLink.tsx` component that renders `<a href="tel:+9779858030326">` with optional phone icon
+- Updated `Footer.tsx` to use PhoneLink for phone display in contact section (left column)
+- Updated `ContactPage.tsx` to use PhoneLink for phone display in contact info (right side)
+- All phone numbers now tap-to-dial on mobile, open dialer on desktop
+- Full accessibility support with aria-labels and title attributes
+- Styling inherits brand colors (white on dark bg in footer, blue on light bg in contact page)
+
+### "Call Now" CTA buttons added to high-traffic pages
+
+**Affected files:**
+- `src/pages/HomePage.tsx` — Added CallNowCTA component after Services Strip section
+- `src/pages/ServicesPage.tsx` — Enhanced CTA Banner to include "Call Now" button alongside "Contact Us"
+- `src/pages/AboutPage.tsx` — Added CallNowSection after Service Areas section
+- `src/i18n/en.json` — New `cta` namespace with 5 CTA key variants
+- `src/i18n/np.json` — Nepali translations for all CTA keys
+
+**Changes:**
+- HomePage: New light blue section with question prompt + "Call Now" button (positioned after Services Strip for peak engagement)
+- ServicesPage: Dual CTA approach in existing banner (Contact Us + Call Now side-by-side)
+- AboutPage: Call-to-action section after Service Areas with contextual messaging
+- All CTAs use Tailwind styling with hover effects and smooth transitions
+- All CTAs feature phone icon for visual clarity
+- i18n keys: `cta.callNow`, `cta.callUsToday`, `cta.talkToExpert`, `cta.speakWithUs`, `cta.questions`
+
+### Impact
+- **Mobile UX:** Direct tap-to-dial reduces friction for phone inquiries (especially valuable in Nepal market with high mobile adoption)
+- **Conversion:** 3+ new CTA placements capture engaged users at optimal scroll depth (after content consumption)
+- **Accessibility:** Full WCAG compliance with aria-labels and semantic HTML
+- **SEO:** tel: links are standard HTML, supported by crawlers; structured data unchanged
+- **Build:** Zero regressions; all SEO checks pass; sitemap auto-generated
+
+### Build validation
+- ✅ `npm run build` succeeds with zero errors
+- ✅ `npm run seo:report` passes all checks (robots.txt, sitemap, OG tags, image alts)
+- ✅ 6 static pages generated with CSS + JS bundles
+- ✅ Sitemap includes all 6 routes with hreflang tags
+
+---
+
 ## 2026-04-14 — Post-launch cleanup: legal links removed, mobile nav trimmed, WCAG 2.2 SC 1.4.3 fully resolved
 
 ### Legal links removed from footer

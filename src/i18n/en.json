@@ -247,5 +247,12 @@
     "loading": "Loading...",
     "available": "Available",
     "notAvailable": "Not Available"
+  },
+  "cta": {
+    "callNow": "Call Now",
+    "callUsToday": "Call us today",
+    "talkToExpert": "Talk to an expert",
+    "speakWithUs": "Speak with us",
+    "questions": "Questions? Call us now"
   }
 }

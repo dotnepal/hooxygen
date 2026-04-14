@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
-import { Button, Card, Badge, SectionHeader } from '../components/ui'
+import { Button, Card, Badge, SectionHeader, PhoneLink } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 import HOHeroImage from '../assets/img/ho-heroimage-747x420.jpg'
@@ -271,6 +271,32 @@ function TrustGallery() {
   )
 }
 
+// ─── Call Now CTA ──────────────────────────────────────────────────────────
+
+function CallNowCTA() {
+  const { t } = useTranslation()
+  const ref = useScrollAnimation<HTMLDivElement>()
+
+  return (
+    <section
+      aria-label="Call now for immediate assistance"
+      className="py-16 px-6 bg-brand-light text-center"
+    >
+      <div ref={ref} className="animate-on-scroll max-w-4xl mx-auto">
+        <p className="text-lg font-body text-brand-dark mb-6">
+          {t('cta.questions')}
+        </p>
+        <PhoneLink
+          phone="+9779858030326"
+          display={t('cta.callNow')}
+          className="inline-flex items-center gap-2 px-8 py-4 bg-brand-blue text-white font-display font-semibold rounded-lg hover:bg-brand-dark transition-all hover:shadow-lg text-lg"
+          icon={true}
+        />
+      </div>
+    </section>
+  )
+}
+
 // ─── CTA Banner ────────────────────────────────────────────────────────────
 
 function CTABanner() {
@@ -313,6 +339,7 @@ export default function HomePage() {
       <HomeHero />
       <GasHighlights />
       <ServicesStrip />
+      <CallNowCTA />
       <TrustGallery />
       <CTABanner />
     </main>

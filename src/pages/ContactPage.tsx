@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
-import { Button, PageHero, SectionHeader } from '../components/ui'
+import { Button, PageHero, SectionHeader, PhoneLink } from '../components/ui'
 import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 
 export const ssgOptions: SsgOptions = {
@@ -358,7 +358,15 @@ function ContactInfo() {
             <span className="mt-0.5 flex-shrink-0 text-brand-blue">{item.icon}</span>
             <div>
               <p className="font-body font-medium text-brand-dark text-sm">{item.label}</p>
-              <p className="font-body text-brand-steel text-sm mt-0.5">{item.value}</p>
+              {item.label === t('contact.info.phone') ? (
+                <PhoneLink
+                  phone="+9779858030326"
+                  display={item.value}
+                  className="font-body text-brand-blue text-sm mt-0.5 hover:underline transition-colors"
+                />
+              ) : (
+                <p className="font-body text-brand-steel text-sm mt-0.5">{item.value}</p>
+              )}
             </div>
           </li>
         ))}

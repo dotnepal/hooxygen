@@ -4,6 +4,7 @@ import PageHero from '../components/ui/PageHero'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import SectionHeader from '../components/ui/SectionHeader'
+import { PhoneLink } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 
@@ -256,10 +257,17 @@ export default function ServicesPage() {
           <p className="mt-4 font-body text-brand-dark text-base sm:text-lg">
             {t('services.cta.subtitle')}
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button as="a" href="/contact" size="lg" variant="primary">
               {t('services.cta.button')}
             </Button>
+            <span className="text-brand-steel">or</span>
+            <PhoneLink
+              phone="+9779858030326"
+              display={t('cta.callNow')}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-brand-blue text-white font-display font-semibold rounded-lg hover:bg-brand-dark transition-all"
+              icon={true}
+            />
           </div>
         </div>
       </section>
