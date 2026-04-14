@@ -1,7 +1,7 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
 
+
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'white-outline'
-type ButtonSize = 'sm' | 'md' | 'lg'
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary:
@@ -16,58 +16,61 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
     'border-2 border-white text-white bg-transparent hover:bg-white/15',
 }
 
-const SIZE_CLASSES: Record<ButtonSize, string> = {
-  sm: 'px-4 py-2 text-sm rounded-md',
-  md: 'px-6 py-3 text-base rounded-lg',
-  lg: 'px-8 py-4 text-lg rounded-xl',
-}
+
 
 const BASE =
-  'inline-flex items-center justify-center gap-2 font-body font-medium min-h-[44px] min-w-[44px] transition-all duration-200 ease-out focus-visible:outline-2 focus-visible:outline-brand-accent focus-visible:outline-offset-2 cursor-pointer select-none'
+  'inline-flex items-center justify-center gap-2 font-body font-medium min-h-[44px] min-w-[44px] transition-all duration-200 ease-out focus-visible:outline-2 focus-visible:outline-brand-accent focus-visible:outline-offset-2 cursor-pointer select-none text-sm sm:text-base lg:text-lg rounded-md sm:rounded-lg lg:rounded-xl px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4'
 
 // ─── Button rendered as <a> ───────────────────────────────────────────────
+
 
 type LinkButtonProps = {
   as: 'a'
   href: string
   variant?: ButtonVariant
-  size?: ButtonSize
   className?: string
   children: ReactNode
 } & AnchorHTMLAttributes<HTMLAnchorElement>
 
 // ─── Button rendered as <button> ─────────────────────────────────────────
 
+
 type NativeButtonProps = {
   as?: 'button'
   href?: never
   variant?: ButtonVariant
-  size?: ButtonSize
   className?: string
   children: ReactNode
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
-type ButtonProps = LinkButtonProps | NativeButtonProps
+
+type ButtonProps = (LinkButtonProps | NativeButtonProps) & {
+  customPadding?: boolean
+}
 
 /**
  * Polymorphic Button component.
  *
  * Usage:
- *   <Button variant="primary" size="lg">Contact Us</Button>
+ *   <Button variant="primary">Contact Us</Button>
  *   <Button as="a" href="/contact" variant="outline">Learn More</Button>
+ *
+ * Sizing and padding should be controlled via Tailwind classes in className prop for full responsive control.
  */
-export default function Button({
-  variant = 'primary',
-  size = 'md',
-  className = '',
-  children,
-  ...rest
-}: ButtonProps) {
-  const classes = `${BASE} ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`
+export default function Button(props: ButtonProps) {
+  const {
+    variant = 'primary',
+    className = '',
+    children,
+    customPadding = false,
+    ...rest
+  } = props
 
-  if (rest.as === 'a') {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { as, ...anchorRest } = rest as LinkButtonProps
+  const classes = `${BASE} ${VARIANT_CLASSES[variant]} ${className}`
+
+  if ((rest as LinkButtonProps).as === 'a') {
+    // Remove customPadding from anchorRest
+    const { as, customPadding: _customPadding, ...anchorRest } = rest as LinkButtonProps & { customPadding?: boolean }
     return (
       <a className={classes} {...anchorRest}>
         {children}
@@ -75,8 +78,8 @@ export default function Button({
     )
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { as, ...btnRest } = rest as NativeButtonProps
+  // Remove customPadding from btnRest
+  const { as, customPadding: _customPadding, ...btnRest } = rest as NativeButtonProps & { customPadding?: boolean }
   return (
     <button className={classes} {...btnRest}>
       {children}

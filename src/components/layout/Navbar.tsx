@@ -1,21 +1,43 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ROUTES } from '../../routes'
+import { NavLink } from 'react-router-dom'
 import { useScrolled } from '../../hooks/useScrolled'
-import LanguageToggle from '../ui/LanguageToggle'
+import { ROUTES } from '../../routes'
 import Button from '../ui/Button'
+import LanguageToggle from '../ui/LanguageToggle'
 
 // ─── Logo ──────────────────────────────────────────────────────────────────
 
 function Logo({ transparent = false, onClick }: { transparent?: boolean; onClick?: () => void }) {
   const fills = transparent
-    ? { body: 'white', bottom: 'rgba(255,255,255,0.7)', cap: 'rgba(255,255,255,0.6)', glow: 'rgba(255,255,255,0.4)' }
-    : { body: 'var(--color-brand-blue)', bottom: 'var(--color-brand-dark)', cap: 'var(--color-brand-dark)', glow: 'var(--color-brand-accent)' }
+    ? {
+        body: 'white',
+        bottom: 'rgba(255,255,255,0.7)',
+        cap: 'rgba(255,255,255,0.6)',
+        glow: 'rgba(255,255,255,0.4)',
+      }
+    : {
+        body: 'var(--color-brand-blue)',
+        bottom: 'var(--color-brand-dark)',
+        cap: 'var(--color-brand-dark)',
+        glow: 'var(--color-brand-accent)',
+      }
 
   return (
-    <NavLink to="/" aria-label="HO Oxygen — Home" className="flex items-center gap-2 select-none" onClick={onClick}>
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" className="shrink-0">
+    <NavLink
+      to="/"
+      aria-label="HO Oxygen — Home"
+      className="flex items-center gap-0 sm:gap-2 select-none"
+      onClick={onClick}
+    >
+      <svg
+        width="32"
+        height="32"
+        viewBox="0 0 32 32"
+        fill="none"
+        aria-hidden="true"
+        className="shrink-0"
+      >
         <ellipse cx="16" cy="7" rx="9" ry="4" fill={fills.body} />
         <rect x="7" y="7" width="18" height="16" fill={fills.body} />
         <ellipse cx="16" cy="23" rx="9" ry="4" fill={fills.bottom} />
@@ -24,7 +46,10 @@ function Logo({ transparent = false, onClick }: { transparent?: boolean; onClick
       </svg>
       <span className="font-display font-bold leading-none">
         <span className={transparent ? 'text-white text-xl' : 'text-brand-blue text-xl'}>HO</span>
-        <span className={transparent ? 'text-white/80 text-lg' : 'text-brand-dark text-lg'}> Oxygen</span>
+        <span className={transparent ? 'text-white/80 text-lg' : 'text-brand-dark text-lg'}>
+          {' '}
+          Oxygen
+        </span>
       </span>
     </NavLink>
   )
@@ -107,14 +132,54 @@ function MenuIcon({ open }: { open: boolean }) {
     >
       {open ? (
         <>
-          <line x1="4" y1="4" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="18" y1="4" x2="4" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <line
+            x1="4"
+            y1="4"
+            x2="18"
+            y2="18"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="18"
+            y1="4"
+            x2="4"
+            y2="18"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
         </>
       ) : (
         <>
-          <line x1="3" y1="6" x2="19" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="3" y1="11" x2="19" y2="11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="3" y1="16" x2="19" y2="16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <line
+            x1="3"
+            y1="6"
+            x2="19"
+            y2="6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="3"
+            y1="11"
+            x2="19"
+            y2="11"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line
+            x1="3"
+            y1="16"
+            x2="19"
+            y2="16"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
         </>
       )}
     </svg>
@@ -155,19 +220,14 @@ export default function Navbar() {
         aria-label="Main navigation"
         className={[
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-          scrolled
-            ? 'bg-white shadow-nav'
-            : 'bg-transparent',
+          scrolled ? 'bg-white shadow-nav' : 'bg-transparent',
         ].join(' ')}
       >
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-8">
+        <div className="max-w-6xl mx-auto px-2 sm:px-6 pr-0 sm:pr-6 h-16 flex items-center justify-between gap-0 sm:gap-8">
           <Logo transparent={transparent} />
 
           {/* Desktop pill links */}
-          <ul
-            role="list"
-            className="hidden md:flex items-center gap-1"
-          >
+          <ul role="list" className="hidden md:flex items-center gap-1">
             {ROUTES.filter((route) => route.path !== '/faq').map((route) => (
               <li key={route.path}>
                 <DesktopNavLink to={route.path} transparent={transparent}>
@@ -178,14 +238,13 @@ export default function Navbar() {
           </ul>
 
           {/* Right controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* CTA button — desktop only */}
             <Button
               as="a"
               href="/contact"
-              size="sm"
               variant={transparent ? 'white-outline' : 'primary'}
-              className="hidden md:inline-flex"
+              className="hidden md:inline-flex px-2! py-2! text-sm! rounded-md! sm:px-4!"
             >
               {t('common.contactUs')}
             </Button>
@@ -202,7 +261,7 @@ export default function Navbar() {
               aria-controls="mobile-dropdown"
               onClick={() => setIsOpen((v) => !v)}
               className={[
-                'md:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg transition-colors',
+                'md:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg transition-colors -ml-2 sm:ml-0',
                 transparent
                   ? 'text-white hover:bg-white/10'
                   : 'text-brand-dark hover:bg-brand-light',
@@ -234,7 +293,6 @@ export default function Navbar() {
               </MobileNavLink>
             ))}
           </nav>
-
         </div>
       </nav>
 

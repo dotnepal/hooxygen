@@ -61,7 +61,7 @@ export default function PageHero({
       />
 
       {/* ── Content ────────────────────────────────────────────────── */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-20 pb-8 sm:pt-24">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-28 pb-8 sm:pt-40 sm:pb-12">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-white leading-tight tracking-tight">
           {title}
         </h1>

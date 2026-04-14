@@ -1,12 +1,16 @@
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { PhoneLink } from '../ui'
 
 // ─── Logo (white variant for dark background) ──────────────────────────────
 
 function FooterLogo() {
   return (
-    <Link to="/" aria-label="HO Oxygen — Home" className="flex items-center gap-2 select-none w-fit">
+    <Link
+      to="/"
+      aria-label="HO Oxygen — Home"
+      className="flex items-center gap-2 select-none w-fit"
+    >
       <svg
         width="32"
         height="32"
@@ -72,14 +76,31 @@ function FooterHeading({ children }: { children: React.ReactNode }) {
 // ─── SVG icons ─────────────────────────────────────────────────────────────
 
 const PhoneIcon = (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" />
   </svg>
 )
 
-
 const MapPinIcon = (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
     <circle cx="12" cy="10" r="3" />
   </svg>
@@ -92,14 +113,9 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer
-      role="contentinfo"
-      aria-label="Site footer"
-      className="bg-brand-dark text-white"
-    >
+    <footer role="contentinfo" aria-label="Site footer" className="bg-brand-dark text-white">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-
           {/* ── Left: Logo + Contact details ─────────────────────────────── */}
           <div>
             <FooterLogo />
@@ -112,6 +128,7 @@ export default function Footer() {
               <ul className="space-y-2">
                 <ContactItem icon={PhoneIcon}>
                   <PhoneLink
+                    type="link"
                     phone="+9779858030326"
                     display={t('contact.info.phoneValue')}
                     className="text-white/70 hover:text-white transition-colors"
@@ -152,9 +169,7 @@ export default function Footer() {
 
         {/* ── Copyright bar ─────────────────────────────────────────────── */}
         <div className="border-t border-white/10 mt-10 pt-6">
-          <p className="text-center text-sm text-white/60">
-            {t('footer.copyright', { year })}
-          </p>
+          <p className="text-center text-sm text-white/60">{t('footer.copyright', { year })}</p>
         </div>
       </div>
     </footer>
