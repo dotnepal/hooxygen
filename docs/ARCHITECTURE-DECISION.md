@@ -1,7 +1,7 @@
 # HO Oxygen — Architecture & System Design
 
-**Date:** 2026-03-27
-**Status:** Approved for implementation (pending user sign-off on this document)
+**Date:** 2026-03-27 (last updated: 2026-04-14 to reflect Services page addition and SEO features)
+**Status:** Approved for implementation — Phase 2-3 COMPLETE, Phase 4 IN PROGRESS
 **Author:** Architecture planning session
 
 ---
@@ -33,12 +33,21 @@
 
 ## 1. Project Context
 
-This is a **greenfield static informational website** for HO Oxygen in Nepal. As of 2026-03-27:
+This is a **static informational website** for HO Oxygen in Nepal. As of 2026-04-14:
 
-- Zero source code exists. No `src/`, `package.json`, or build artifacts.
-- Only documentation files are present (`CLAUDE.md`, `tasks/1-FEATURES.md`, `docs/`).
-- Phase 1 (design/mockup) is complete. Phase 2 (implementation) is approved.
-- 14 feature tasks (F-001 to F-014) must be implemented in a prescribed order.
+- **Phase 2 COMPLETE (2026-03-28):** All frontend pages built and deployed
+  - 6 pages: Home, About, Products, Services, Contact, FAQ
+  - Full i18n (EN/NP), animations, accessibility, responsive design
+  - CI/CD pipeline wired to Cloudflare Pages
+  
+- **Phase 3 COMPLETE (2026-04-14):** Full SEO optimization
+  - OG tags, hreflang, canonical URLs, structured data (JSON-LD)
+  - Dynamic sitemap generation + CI/CD validation
+  - Image optimization, keyword expansion, enhanced robots.txt
+  
+- **Phase 4 IN PROGRESS:** Backend integration
+  - Contact form submission wired to Cloudflare Pages Function
+  - Email notifications via contact-mailer Worker (service binding)
 
 **Business constraints that drive architecture:**
 - Informational only — no user accounts, no database, no CMS.
@@ -73,12 +82,13 @@ This is a **greenfield static informational website** for HO Oxygen in Nepal. As
 │  index.html            → Home page (pre-rendered)                │
 │  about/index.html      → About page (pre-rendered)               │
 │  products/index.html   → Products page (pre-rendered)            │
+│  services/index.html   → Services page (pre-rendered)            │
 │  contact/index.html    → Contact page (pre-rendered)             │
 │  faq/index.html        → FAQ page (pre-rendered)                 │
 │  assets/               → Hashed JS + CSS bundles                 │
 │  _redirects            → SPA fallback rule                       │
 │  robots.txt            → Search engine directives                │
-│  sitemap.xml           → All 5 page URLs                         │
+│  sitemap.xml           → All 6 page URLs with hreflang tags      │
 └───────────────────────┬─────────────────────────────────────────┘
                         │ Cloudflare Pages deploy
                         ▼
@@ -126,8 +136,8 @@ ho-gas-factory/
 │
 ├── public/                             # Copied verbatim into dist/ at build time
 │   ├── _redirects                      # /* /index.html 200 (SPA fallback for CF Pages)
-│   ├── robots.txt                      # Search engine directives
-│   └── sitemap.xml                     # All 5 page URLs for SEO
+│   ├── robots.txt                      # Search engine directives with AI bot allow-list
+│   └── sitemap.xml                     # Reference sitemap (overwritten at build time)
 │
 ├── src/
 │   ├── main.tsx                        # React entry point — bootstraps i18n then renders App
@@ -140,6 +150,7 @@ ho-gas-factory/
 │   │   ├── HomePage.tsx
 │   │   ├── AboutPage.tsx
 │   │   ├── ProductsPage.tsx
+│   │   ├── ServicesPage.tsx
 │   │   ├── ContactPage.tsx
 │   │   └── FAQPage.tsx
 │   │
@@ -218,8 +229,24 @@ ho-gas-factory/
 ├── tsconfig.json
 ├── tsconfig.node.json
 ├── vite.config.ts
-└── wrangler.toml                       # Cloudflare Pages project config
+├── wrangler.toml                       # Cloudflare Pages project config
+│
+├── scripts/                            # Post-build automation
+│   ├── generate-sitemap.mjs            # Generates dist/sitemap.xml with hreflang + today's date
+│   ├── inject-scripts.mjs              # Injects hashed main JS bundle into HTML files
+│   └── seo-report.mjs                  # CI validation: checks robots.txt, sitemap, OG tags, image alts
+│
+└── .github/
+    └── workflows/
+        └── deploy.yml                  # GitHub Actions: build + SEO check + deploy to Cloudflare Pages
 ```
+
+**Build Pipeline (in order):**
+1. `tsc -b` — TypeScript build
+2. `vite build` — Vite pre-renders all 6 pages to static HTML
+3. `scripts/inject-scripts.mjs` — Injects hashed main bundle into all HTML files
+4. `scripts/generate-sitemap.mjs` — Generates `dist/sitemap.xml` from route config with today's date
+5. `npm run seo:report` — CI validation (run in GitHub Actions before deploy)
 
 ---
 
@@ -228,7 +255,7 @@ ho-gas-factory/
 **Status:** Decided
 
 **Context:**
-This site has 5 pages with static content. No user-specific data, no real-time information, no authentication. The contact form is the only dynamic element (handled server-side by a Cloudflare Pages Function).
+This site has 6 pages with static content: Home, About, Products, Services, Contact, FAQ. No user-specific data, no real-time information, no authentication. The contact form is the only dynamic element (handled server-side by a Cloudflare Pages Function).
 
 **Options considered:**
 

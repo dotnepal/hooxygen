@@ -1,4 +1,4 @@
-**Date:** March 27, 2026
+**Date:** April 14, 2026 (Last synced after production launch + callable phone links feature)
 
 **Project:** Informational Website for Gas Refilling Factory
 
@@ -18,14 +18,11 @@
 - It has 3 sections (left, middle, right)
 
 ### Left
-    - FAQ
-    - Contact details
+    - Contact details (phone, address; email hidden)
 ### Middle
-    - privacy
-    - terms
-    - sitemap
+    - Quick Links (Services, Contact, Products)
 ### Right
-    - Google map on the right side
+    - Google map embedded on the right side
 
 ---
 ## 1. Website Overview
@@ -62,6 +59,8 @@
 1. **Oxygen Gas** (Primary - Medical use)
 2. **Nitrogen Gas**
 3. **Hydrogen Gas**
+4. **Carbon Dioxide (CO₂)**
+5. **Argon (Ar)**
 
 ### 2.2 Product Organization
 
@@ -74,7 +73,6 @@
 For each cylinder size, display:
 
 - **Capacity:** In liters
-- **Weight:** Filled cylinder weight only
 - **Description:** Brief description of the cylinder/use case
 - **Availability Indicators:**
     - Available for Rent (✓ or ✗)
@@ -98,10 +96,12 @@ For each cylinder size, display:
 ### 3.1 Main Navigation Menu (Standard)
 
 1. **Home** - Landing page with overview
-2. **About Us** - Company information, mission, and team
-3. **Products/Services** - Gas types and ordering options
-4. **Contact** - Contact form and inquiry
-5. **FAQ** - Frequently asked questions, accordion style
+2. **Services** - Service offerings (Rent, Sale, Refilling, Bulk, Delivery, Pickup)
+3. **Products** - Gas types and cylinder details
+4. **About Us** - Company information, mission, and service areas
+5. **Contact** - Contact form and inquiry
+
+> **Note:** FAQ page exists at `/faq` but is hidden from main navigation and footer links. Accessible via direct URL.
 
 ### 3.2 Page Descriptions
 
@@ -116,19 +116,23 @@ For each cylinder size, display:
 ### About Us Page
 
 - Company history and mission
-- Team member bios with photos
 - Facility photos/images
 - Service areas coverage (local, regional, national)
-- Why choose us section
 
-### Products/Services Page
+### Services Page
+
+- Service cards for 6 offerings: Rent, Sale, Refilling, Bulk Orders, Delivery, Pickup
+- CTA section with "Contact Us" and "Call Now" buttons
+- Why Choose Us section (safety, certified, delivery, support)
+
+### Products Page
 
 - **Gas Types Section:**
-    - Organized tabs or sections for each gas type (Oxygen, Nitrogen, Hydrogen)
+    - Organized tabs for each gas type (Oxygen, Nitrogen, Hydrogen, CO₂, Argon)
     - For each gas type:
         - Description of the gas and its uses
         - List of available cylinder sizes
-        - Cylinder details table (Capacity, Weight, Rent availability, Sale availability)
+        - Cylinder details table (Capacity, Rent availability, Sale availability, Pricing CTA)
 - **Services Section:**
     - Cylinder refilling services
     - Bulk order capabilities
@@ -146,10 +150,10 @@ For each cylinder size, display:
     - Requirement Type (dropdown: Rent, Sale, Both)
     - Message/Additional Details (optional)
 - **Contact Information Display:**
-    - Phone number
-    - Email address
-    - Physical address (if applicable)
-    - Google map
+    - Phone number (clickable tel: link for mobile)
+    - Physical address
+    - Google map embedded
+    - *(Email address hidden until correct address is confirmed)*
 - **Form Submission:** All inquiries go to single email inbox
 
 ### FAQ Page
@@ -193,7 +197,6 @@ For each cylinder size, display:
 ### 5.1 Imagery
 
 - **Facility Photos:** Production and storage areas
-- **Team Photos:** Staff and leadership
 - **Product Photos:** Cylinder samples (different sizes)
 - **Safety/Professional Images:** As needed for credibility
 
@@ -228,15 +231,16 @@ For each cylinder size, display:
 
 ### 7.2 Technology Stack (Confirmed)
 
-- **Runtime:** React 18 + TypeScript
-- **Build:** Vite + `vite-plugin-ssg` (static site generation)
-- **Styling:** Tailwind CSS with custom brand tokens
-- **Fonts:** Sora (display) + DM Sans (body)
+- **Runtime:** React 19 + TypeScript
+- **Build:** Vite 5 + SSG prerender (static site generation)
+- **Styling:** Tailwind CSS v4 (CSS-native `@theme` config, not `tailwind.config.ts`)
+- **Fonts:** Sora 400/600/700 (display) + DM Sans 400/500/700 (body) — Google Fonts
 - **Routing:** react-router-dom v6
-- **i18n:** react-i18next + i18next
-- **Forms:** react-hook-form
+- **i18n:** react-i18next + i18next + i18next-browser-languagedetector (EN/NP toggle, bundled translations)
+- **Forms:** react-hook-form (client-side validation)
+- **Animations:** Motion library (React) for hero staggered reveals; CSS @keyframes + Intersection Observer for scroll effects
 - **Hosting:** Cloudflare Pages
-- **Form submission:** Cloudflare Pages Functions (Web3Forms as fallback)
+- **Form submission:** Cloudflare Pages Functions (`/api/contact`) with Web3Forms API integration
 - **Domain & SSL:** Cloudflare
 
 ### 7.3 Accessibility & SEO
@@ -251,12 +255,13 @@ For each cylinder size, display:
 
 ## 8. Development Phases
 
-**Phase 1:** Design mockups and approval ✓ Complete
-**Phase 2:** Frontend development (React + Vite + Tailwind) ← Current
-**Phase 3:** Backend integration (contact form, email notifications)
-**Phase 4:** Testing and QA
-**Phase 5:** Deployment and launch
-**Phase 6:** Post-launch optimizations and updates
+**Phase 1:** Design mockups and approval — ✓ COMPLETE (2026-03-27)
+**Phase 2:** Frontend development — ✓ COMPLETE (2026-03-28) — All 6 pages (Home, About, Products, Services, Contact, FAQ) + CI/CD pipeline
+**Phase 3:** SEO optimization — ✓ COMPLETE (2026-04-14) — OG tags, hreflang, sitemap generation, CI/CD validation, keyword expansion
+**Phase 4:** Backend integration (contact form, email notifications) — IN PROGRESS
+**Phase 5:** Testing and QA
+**Phase 6:** Production launch
+**Phase 7:** Post-launch optimizations and monitoring
 
 ---
 
@@ -268,11 +273,16 @@ ASCII wireframes and full feature breakdown are in `tasks/1-FEATURES.md`.
 
 ---
 
-## 10. Approval & Sign-off
+## 10. Project Status & Sign-off
 
-**Project Status:** Phase 1 Complete ✓ — Ready for Phase 2 (Frontend Implementation)
+**Current Status:** Phase 2-3 Complete ✓, Phase 4 In Progress
 
-**Feature tasks:** See `tasks/1-FEATURES.md` (F-001 through F-014)
+**Completed Phases:**
+- Phase 1 (Design) — All mockups approved
+- Phase 2 (Frontend) — All 6 pages built with responsive design, i18n, animations, accessibility
+- Phase 3 (SEO) — Full SEO optimization with OG tags, hreflang, dynamic sitemap generation, CI/CD validation
+
+**Feature tracking:** See `tasks/1-FEATURES.md` (F-001 through F-016 complete) and `CHANGELOG.md` for full implementation history
 
 ---
 
