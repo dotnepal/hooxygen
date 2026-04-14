@@ -208,8 +208,8 @@
       "emailValue": "info@hooxygen.com.np",
       "addressValue": "Parashpur-17, Nepalgunj, Banke"
     },
-    "map": {
-      "title": "Our Location"
+    "notice": {
+      "wait": "Please wait few seconds after submitting inquiry. It will take some time."
     }
   },
   "faq": {

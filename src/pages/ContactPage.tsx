@@ -260,10 +260,10 @@ function ContactForm() {
           >
             <option value="">{t('contact.form.gasTypePlaceholder')}</option>
             <option value="oxygen">{t('contact.form.gasOptions.oxygen')}</option>
-            <option value="nitrogen">{t('contact.form.gasOptions.nitrogen')}</option>
-            <option value="hydrogen">{t('contact.form.gasOptions.hydrogen')}</option>
             <option value="argon">{t('contact.form.gasOptions.argon')}</option>
             <option value="carbondioxide">{t('contact.form.gasOptions.carbondioxide')}</option>
+            <option value="hydrogen">{t('contact.form.gasOptions.hydrogen')}</option>
+            <option value="nitrogen">{t('contact.form.gasOptions.nitrogen')}</option>
             <option value="other">{t('contact.form.gasOptions.other')}</option>
           </select>
         </div>
@@ -362,7 +362,6 @@ function ContactInfo() {
 
       {/* Map */}
       <div className="mt-6">
-        <p className="font-body font-medium text-brand-dark text-sm mb-2">{t('contact.map.title')}</p>
         <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm h-56">
           <iframe
 	    title="HO Oxygen Location — Parashpur, Nepalgunj, Nepal"
@@ -376,6 +375,13 @@ function ContactInfo() {
             referrerPolicy="no-referrer-when-downgrade"
           />
         </div>
+      </div>
+      <br/>
+      {/* Submission notice */}
+      <div className="mt-4 rounded-xl border-2 border-orange-400 bg-orange-50 p-4 text-center">
+        <p className="font-body font-semibold text-orange-600 text-sm leading-relaxed">
+          {t('contact.notice.wait')}
+        </p>
       </div>
     </aside>
   )
