@@ -13,7 +13,8 @@
     "cf:deploy": "npm run cf:deploy:mailer && npm run cf:deploy:pages",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\""
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
+    "seo:report": "node scripts/seo-report.mjs"
   },
   "dependencies": {
     "i18next": "^25.2.1",
