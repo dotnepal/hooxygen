@@ -10,6 +10,7 @@ import { ROUTES } from './routes'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import SkipToContentLink from './components/layout/SkipToContentLink'
+import { StructuredData } from './components/seo/StructuredData'
 
 // ─── Root layout shell ─────────────────────────────────────────────────────
 function RootLayout() {
@@ -30,6 +31,7 @@ function RootLayout() {
       <SkipToContentLink />
       <Navbar />
       <Outlet />
+      <StructuredData />
       <Footer />
     </>
   )

@@ -4,7 +4,7 @@
 
 **Purpose:** Build brand trust, showcase services, and generate sales leads
 
-**Current State:** Phase 2 COMPLETE — F-001 through F-016 complete (including F-014 Deploy). All pages live, CI/CD pipeline wired. Post-launch cleanup done (legal links removed, mobile nav trimmed, WCAG 2.2 SC 1.4.3 fully resolved). Ready for Phase 3 (backend integration / production launch).
+**Current State:** Phase 2 COMPLETE (F-001 to F-016). All pages live, CI/CD pipeline wired. SEO optimization COMPLETE (Phases 1-4: OG tags, hreflang, sitemap generation, CI/CD checks, image optimization, keyword expansion). Ready for manual sitemap submission to Google Search Console and production launch.
 
 **Repository Contents (as of 2026-04-14):**
 - `CLAUDE.md` — project specification and workflow rules (this file)
@@ -30,8 +30,13 @@
 - `src/hooks/useScrollAnimation.ts` — IntersectionObserver hook for scroll-triggered animations (stagger support)
 - `src/i18n/` — en.json, np.json, index.ts, ssgContext.tsx
 - `src/data/` — products.ts (cylinder data for all 5 gas types), faq.ts (12 FAQ items)
-- `public/robots.txt` — crawl rules pointing to sitemap
-- `public/sitemap.xml` — all 6 routes with priorities
+- `public/robots.txt` — crawl rules with AI bot allow-list (GPTBot, Claude-Web, Googlebot-Extended, CCBot, anthropic-ai)
+- `public/sitemap.xml` — reference sitemap (overwritten by `scripts/generate-sitemap.mjs` at build time)
+- `scripts/inject-scripts.mjs` — post-build script: injects main JS bundle into HTML files
+- `scripts/generate-sitemap.mjs` — post-build script: generates dynamic `dist/sitemap.xml` with hreflang + today's date
+- `scripts/seo-report.mjs` — CI validation script: checks robots.txt, sitemap.xml, OG meta tags, image alt attributes
+- `src/utils/seoHelpers.tsx` — SEO utilities: `generatePageHead()` (OG tags, hreflang, canonical), `generateStructuredData()` (JSON-LD)
+- `src/components/seo/StructuredData.tsx` — React component: renders Organization + LocalBusiness JSON-LD schema
 - `functions/api/contact.ts` — Cloudflare Pages Function for form submission
 - `public/_redirects` — SPA routing rule for Cloudflare Pages
 - `wrangler.toml` — Cloudflare Pages config skeleton
@@ -306,7 +311,25 @@ For each cylinder size, display:
 - Elaborate your answer. 
 - After successful completion, wait for input for next feature.
 
-### 7.2 Technology Stack (CONFIRMED — See "Tech Stack" section above)
+### 7.2 Build Pipeline & Post-Build Scripts
+
+**Build chain (in `package.json`):**
+```
+npm run build = tsc -b && vite build && node scripts/inject-scripts.mjs && node scripts/generate-sitemap.mjs
+```
+
+1. **tsc -b** — TypeScript build
+2. **vite build** — Vite pre-renders all pages (SSG via vite-plugin-ssg)
+3. **inject-scripts.mjs** — Injects hashed main bundle into all HTML files
+4. **generate-sitemap.mjs** — Overwrites `dist/sitemap.xml` with freshly generated version (uses today's date, reads route config)
+
+The CI/CD pipeline (`deploy.yml`) then:
+- Runs `npm run build`
+- Executes `npm run seo:report` for SEO validation
+- If all checks pass: uploads artifact and (on main push) deploys to Cloudflare Pages
+- If validation fails: build stops (exit 1) and deployment is blocked
+
+### 7.3 Technology Stack (CONFIRMED — See "Tech Stack" section above)
 
 - **Frontend:** React 19 + TypeScript + Vite 5 + SSG prerender
 - **Styling:** Tailwind CSS v4 (CSS-native @theme config)
@@ -314,11 +337,51 @@ For each cylinder size, display:
 - **Email/Form:** Cloudflare Pages Functions (`functions/api/contact.ts`) + contact-mailer Worker (service binding)
 - **Domain/SSL:** Cloudflare (managed via `wrangler.toml`)
 
-### 7.3 Accessibility & SEO
+### 7.4 SEO Implementation (Phases 1-4 Complete — 2026-04-14)
+
+**Phase 1 — Meta Tags & Structured Data:**
+- Open Graph tags (og:title, og:description, og:image, og:url, og:locale, og:locale:alternate)
+- Twitter Card tags (summary_large_image)
+- Canonical tags (per-page, absolute URLs)
+- JSON-LD structured data (Organization, LocalBusiness schemas)
+- Implemented in `src/utils/seoHelpers.tsx` and `src/components/seo/StructuredData.tsx`
+
+**Phase 2 — Technical SEO:**
+- Hreflang tags for EN/NP bilingual support (self-referential — both langs point to same URL)
+- Enhanced `robots.txt` with AI bot allow-list (GPTBot, Claude-Web, Googlebot-Extended, CCBot, anthropic-ai)
+- Fixed `sitemap.xml` with all 6 routes, `<lastmod>` dates, hreflang `xhtml:link` alternates
+- Removed duplicate `<meta name="description">` tags across all pages
+
+**Phase 3 — Image & Content Optimization:**
+- Image lazy loading (`loading="lazy"` on off-screen images; `loading="eager"` on hero)
+- Improved image alt text (descriptive, location-specific, keyword-rich)
+- Expanded page keywords with location terms (Nepalgunj, Banke, Parashpur, Lumbini province)
+- Added long-tail keyword variants (e.g., "CO2 supply" alongside existing `CO₂`)
+
+**Phase 4 — CI/CD Automation:**
+- `scripts/generate-sitemap.mjs` — auto-generates `dist/sitemap.xml` on every build from route config
+- `scripts/seo-report.mjs` — validates robots.txt, sitemap, OG tags, image alts; blocks bad builds
+- `.github/workflows/deploy.yml` — added SEO check step in `build` job (after build, before artifact upload)
+- `package.json` scripts: `seo:report` (manual validation) and `sitemap:generate` (manual regeneration)
+
+**Impact:**
+- Builds fail if critical SEO checks fail (no bad SEO reaches production)
+- Sitemap always in sync with deployed routes (zero manual sync needed)
+- All pages have: OG tags, hreflang, canonical URLs, structured data, optimized images, expanded keywords
+- Google crawlers and AI bots (Claude, ChatGPT, Gemini) can properly index the site
+
+**Next Steps After Deployment:**
+1. Manually submit `sitemap.xml` to Google Search Console (visit https://search.google.com/search-console)
+2. Monitor indexing status via Google Search Console dashboard
+3. Check Core Web Vitals and crawl statistics
+4. Use `npm run seo:report` locally anytime before pushing changes to verify SEO compliance
+5. If routes are added: update `scripts/generate-sitemap.mjs` route config (build will auto-regenerate sitemap)
+
+### 7.5 Accessibility & SEO
 
 - Mobile-friendly design first
 - Fast loading times
-- Clear metadata and SEO optimization
+- Clear metadata and SEO optimization (see Phase 1-4 above)
 - Accessible color contrast and font sizing, must follow https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
 - Proper heading hierarchy
 
@@ -331,10 +394,17 @@ For each cylinder size, display:
   - F-001 through F-016 all complete — scaffolding, i18n, design system, navbar, footer, all 6 pages, accessibility, animations, responsive design, CI/CD
   - F-014 ✓ COMPLETE — `.github/workflows/deploy.yml` (build on PRs, deploy to CF Pages on main push); `VITE_FORM_ENDPOINT=/api/contact` injected at build time; deployment runbook at `runbooks/DEPLOY.md`
   - Architecture decisions documented in `docs/ARCHITECTURE-DECISION.md`
-**Phase 3:** Backend integration (contact form, email notifications)
-**Phase 4:** Testing and QA
-**Phase 5:** Deployment and launch
-**Phase 6:** Post-launch optimizations and updates
+**Phase 3 (SEO):** SEO optimization — ✓ COMPLETE (2026-04-14)
+  - Phase 1: OG tags, canonical, structured data
+  - Phase 2: Hreflang, enhanced robots.txt, complete sitemap
+  - Phase 3: Image optimization, keyword expansion, alt text
+  - Phase 4: CI/CD validation, dynamic sitemap generation
+  - All 6 pages optimized for search engines and AI crawlers
+  - Tasks tracked in `tasks/SEO.md`
+**Phase 4:** Backend integration (contact form, email notifications) — IN PROGRESS
+**Phase 5:** Testing and QA
+**Phase 6:** Production launch
+**Phase 7:** Post-launch optimizations and monitoring
 
 ---
 

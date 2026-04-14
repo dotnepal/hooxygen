@@ -4,6 +4,7 @@ import type { SsgOptions } from 'vite-plugin-ssg/utils'
 import { Button, Card, SectionHeader, PageHero } from '../components/ui'
 import { PRODUCTS, type GasKey } from '../data/products'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 
 export const ssgOptions: SsgOptions = {
   slug: 'products',
@@ -11,10 +12,13 @@ export const ssgOptions: SsgOptions = {
   Head: () => (
     <>
       <title>Products & Services — HO Oxygen</title>
-      <meta
-        name="description"
-        content="Explore oxygen, nitrogen, and hydrogen gas cylinders available for rent and sale. Refilling, bulk orders, and delivery services across Nepal."
-      />
+      {generatePageHead({
+        title: 'Products & Services — HO Oxygen',
+        description: 'Explore oxygen, nitrogen, and hydrogen gas cylinders available for rent and sale. Refilling, bulk orders, and delivery services across Nepal.',
+        url: '/products',
+        keywords: 'oxygen cylinder, nitrogen gas, CO₂ supply, CO2 supply Nepal, argon gas Nepal, industrial gas cylinders',
+      })}
+      {generateStructuredData()}
     </>
   ),
   context: async (children) => {

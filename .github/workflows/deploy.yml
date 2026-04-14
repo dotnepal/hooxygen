@@ -26,6 +26,9 @@ jobs:
           VITE_FORM_ENDPOINT: /api/contact
           VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
 
+      - name: SEO checks
+        run: npm run seo:report
+
       - uses: actions/upload-artifact@v4
         with:
           name: dist
