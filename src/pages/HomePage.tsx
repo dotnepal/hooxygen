@@ -3,7 +3,6 @@ import type { SsgOptions } from 'vite-plugin-ssg/utils'
 import { Button, Card, Badge, SectionHeader } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import HOHeroImage from '../assets/img/ho-heroimage-747x420.jpg'
-import HoHospitalImage from '../assets/img/ho-hospital-400x280.jpg'
 
 export const ssgOptions: SsgOptions = {
   slug: 'index',
