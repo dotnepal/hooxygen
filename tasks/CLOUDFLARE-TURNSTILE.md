@@ -3,6 +3,7 @@
 **Date:** 2026-04-14
 **Feature:** Bot protection for the Contact form via Cloudflare Turnstile
 **Scope:** `src/pages/ContactPage.tsx`, `functions/api/contact.ts`, `index.html`, `wrangler.toml`, `runbooks/DEPLOY.md`
+**See Online documentation**: https://developers.cloudflare.com/turnstile/?preferred-color-scheme=light
 
 ---
 
@@ -68,15 +69,22 @@ Use `render=explicit` so the widget only mounts when React explicitly calls it.
 
 ---
 
-### Step 3 — Expose Site Key as Build-Time Env Var
+### Step 3 — Add Site Key to `.env.local` (local dev)
 
-**File:** `wrangler.toml` — add to `[vars]`:
+**File:** `.env.local` (gitignored — create manually):
 
-```toml
-VITE_TURNSTILE_SITE_KEY = "YOUR_SITE_KEY_HERE"
+```env
+VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA
 ```
 
-**File:** `.github/workflows/deploy.yml` — inject in the build step:
+> Use CF's test site key for local development. Vite automatically reads `.env.local` at build time.
+> Verify `.env.local` is in `.gitignore` — it should never be committed.
+
+---
+
+### Step 4 — Expose Site Key as Build-Time Env Var (CI/CD)
+
+**File:** `.github/workflows/deploy.yml` — inject in the build step `env:`:
 
 ```yaml
 env:
@@ -87,10 +95,12 @@ Add `VITE_TURNSTILE_SITE_KEY` as a **GitHub Secret** (it is public, but keeping 
 means it is configurable without a code push).
 
 > The site key is safe to expose in client-side code — it is designed to be public.
+> Build-time `VITE_` vars must NOT go in `wrangler.toml [vars]` (that section is for runtime
+> Worker/Pages Function env vars only).
 
 ---
 
-### Step 4 — Add Turnstile Secret Key as Runtime Secret
+### Step 5 — Add Turnstile Secret Key as Runtime Secret
 
 **CF Dashboard → Pages → ho-gas-factory → Settings → Environment Variables → Add variable:**
 
@@ -104,7 +114,23 @@ means it is configurable without a code push).
 
 ---
 
-### Step 5 — Update `ContactFormData` Interface and `Env` in the Pages Function
+### Step 6 — Extend `vite-env.d.ts` with Turnstile Site Key Type
+
+**File:** `src/vite-env.d.ts`
+
+Add to the `ImportMetaEnv` interface:
+
+```typescript
+interface ImportMetaEnv {
+  readonly VITE_TURNSTILE_SITE_KEY: string
+}
+```
+
+> This ensures TypeScript recognizes `import.meta.env.VITE_TURNSTILE_SITE_KEY` as a string.
+
+---
+
+### Step 7 — Update `ContactFormData` Interface and `Env` in the Pages Function
 
 **File:** `functions/api/contact.ts`
 
@@ -164,7 +190,7 @@ if (!verifyData.success) {
 
 ---
 
-### Step 6 — Integrate Turnstile Widget into `ContactPage.tsx`
+### Step 8 — Integrate Turnstile Widget into `ContactPage.tsx`
 
 The widget must be mounted imperatively (explicit mode) because the contact form is inside a
 React component that conditionally renders. Use a `useEffect` + `useRef` approach.
@@ -267,7 +293,7 @@ const onSubmit = async (data: ContactFormData) => {
 
 ---
 
-### Step 7 — Update `runbooks/DEPLOY.md`
+### Step 9 — Update `runbooks/DEPLOY.md`
 
 Add the following to the **Required GitHub Secrets** table:
 
@@ -295,6 +321,8 @@ Add a pre-launch checklist item:
 
 ## Verification Steps
 
+### Required Verifications (blocking)
+
 1. **Local dev:** Run `npm run dev`. Widget container `<div>` renders in the form. Because the
    script is loaded async/defer, `window.turnstile` may not be available immediately in dev — use
    CF test site key so the widget auto-passes.
@@ -314,6 +342,14 @@ Add a pre-launch checklist item:
    - Expect `400 Bot check token missing`
    - POST with a forged/expired token → expect `403 Bot check failed`
 
+### Edge Case TODOs (post-implementation)
+
+- [ ] **Widget reset on success** — After successful submit, confirm widget resets via `window.turnstile.reset()` and Submit button re-enables for a second submission
+- [ ] **Expired token path** — Wait for token to expire (300s) or trigger `expired-callback` manually, verify Submit becomes disabled again
+- [ ] **`window.turnstile` timing** — In local dev, add console warning if `window.turnstile` is undefined when `useEffect` tries to mount widget
+- [ ] **End-to-end flow** — Turnstile challenge passes → `/api/contact` POST succeeds → `CONTACT_MAILER` is called → email received in inbox
+- [ ] **Form state after error** — Submit fails on backend (e.g., invalid email) — confirm error banner shows and widget resets for retry
+
 ---
 
 ## Key Decisions
@@ -326,3 +362,40 @@ Add a pre-launch checklist item:
 | `CF-Connecting-IP` header passed to siteverify | Improves CF's bot signal accuracy (available in Pages Functions automatically) |
 | Test keys for Preview env | Prevents real challenges on PR preview deployments while still exercising the full code path |
 | Secret key in CF Dashboard env vars only | Never in `wrangler.toml` (git-committed) or bundle — server-side only |
+
+---
+
+## Implementation Checklist (Dependency Order)
+
+### Parallel Batch 1 (no dependencies)
+- [ ] **STEP 1** — `index.html` — Add Turnstile `<script>` tag with `render=explicit` after Google Fonts
+- [ ] **STEP 2** — `src/vite-env.d.ts` — Extend `ImportMetaEnv` with `VITE_TURNSTILE_SITE_KEY: string`
+- [ ] **STEP 3** — `.env.local` — Create with test site key (gitignored, local dev only)
+- [ ] **STEP 4** — `.github/workflows/deploy.yml` — Inject `VITE_TURNSTILE_SITE_KEY` from GitHub Secret
+- [ ] **STEP 7** — `functions/api/contact.ts` — Add `turnstileToken` field, `TURNSTILE_SECRET_KEY` to `Env`, siteverify block
+
+### Sequential After Batch 1
+- [ ] **STEP 8** — `src/pages/ContactPage.tsx` — Full widget integration (depends on STEP 1 + 2)
+  - Declare global `window.turnstile` type
+  - Add state: `turnstileToken`, refs: `widgetRef`, `containerRef`
+  - Mount widget in `useEffect` with cleanup
+  - Gate `onSubmit` on token presence
+  - Reset widget after success/error
+  - Add `<div ref={containerRef}>` above Submit
+  - Disable Submit when `!turnstileToken`
+- [ ] **STEP 10** — `npm run build` — Verify no TS errors (gates everything else)
+
+### Parallel Batch 2 (after build passes)
+- [ ] **STEP 5** — `runbooks/DEPLOY.md` — Add secrets table + Turnstile checklist
+- [ ] **STEP 6** — This file (`tasks/CLOUDFLARE-TURNSTILE.md`) — Verification complete, mark edge cases tested
+
+---
+
+## Notes
+
+- **GitHub Secrets required:** `VITE_TURNSTILE_SITE_KEY` (public site key from CF Dashboard)
+- **CF Pages env vars required:**
+  - Production: `TURNSTILE_SECRET_KEY` = real secret key
+  - Preview: `TURNSTILE_SECRET_KEY` = test key `1x0000000000000000000000000000000AA`
+- **Local dev:** Must create `.env.local` with test site key; it's gitignored
+- After implementation, manually test edge cases (see Verification Steps above)
