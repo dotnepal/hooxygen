@@ -19,6 +19,13 @@
       name="description"
       content="HO Oxygen provides reliable oxygen, nitrogen, and hydrogen gas supply for medical facilities, hospitals, and industrial users across Nepal."
     />
+    <!-- Cloudflare Turnstile (explicit render — mounted by ContactPage) -->
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+      async
+      defer
+    ></script>
+
     <!-- Blocking FOUC-prevention script is injected by vite-plugin-ssg via
          config.html.headTags in vite.config.ts — it appears in the built dist/ HTML,
          not here. In dev mode (npm run dev) the SSG HTML is never used, so no script

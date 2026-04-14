@@ -16,10 +16,12 @@ interface ContactFormData {
   gasType?: string
   requirementType?: string
   message?: string
+  turnstileToken: string
 }
 
 export interface Env {
   CONTACT_MAILER: Fetcher
+  TURNSTILE_SECRET_KEY: string
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -35,6 +37,29 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   } catch {
     return Response.json({ success: false, error: 'Invalid JSON body' }, { status: 400 })
   }
+
+  // ── Turnstile bot check ───────────────────────────────────────────────────
+  const { turnstileToken } = data
+  if (!turnstileToken) {
+    return Response.json({ success: false, error: 'Bot check token missing' }, { status: 400 })
+  }
+
+  const verifyForm = new FormData()
+  verifyForm.append('secret', env.TURNSTILE_SECRET_KEY)
+  verifyForm.append('response', turnstileToken)
+  verifyForm.append('remoteip', request.headers.get('CF-Connecting-IP') ?? '')
+
+  const verifyRes = await fetch(
+    'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+    { method: 'POST', body: verifyForm }
+  )
+  const verifyData = await verifyRes.json<{ success: boolean; 'error-codes'?: string[] }>()
+
+  if (!verifyData.success) {
+    console.error('Turnstile verification failed', verifyData['error-codes'])
+    return Response.json({ success: false, error: 'Bot check failed. Please try again.' }, { status: 403 })
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   // Server-side validation of required fields
   const required: (keyof ContactFormData)[] = ['name', 'email', 'phone', 'company']

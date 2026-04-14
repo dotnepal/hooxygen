@@ -34,6 +34,7 @@ Set these in **GitHub → Repository → Settings → Secrets and variables → 
 |-------------|-------------|-----------|
 | `CLOUDFLARE_API_TOKEN` | API token scoped to Cloudflare Pages | CF Dashboard → My Profile → API Tokens → Create Token → "Edit Cloudflare Pages" template |
 | `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID | CF Dashboard → right sidebar (any page) |
+| `VITE_TURNSTILE_SITE_KEY` | Public Turnstile site key (baked into JS bundle at build time) | CF Dashboard → Turnstile → Widget → Site Key |
 
 ---
 
@@ -69,6 +70,9 @@ Set in **CF Dashboard → Pages → ho-gas-factory → Settings → Environment 
 
 | Variable | Environment | Purpose |
 |----------|-------------|---------|
+| `TURNSTILE_SECRET_KEY` | Production | Turnstile secret key for server-side token verification |
+| `TURNSTILE_SECRET_KEY` | Preview | CF test secret key (`1x0000000000000000000000000000000AA`) for PR preview environments |
+
 ---
 
 ## Cloudflare Pages Project Setup (One-Time)
@@ -132,6 +136,10 @@ Alternatively, revert the offending commit on `main` — GitHub Actions will tri
 - [ ] Custom domain (`hooxygen.com.np`) configured in CF Pages → Custom Domains
 - [ ] SSL certificate provisioned by Cloudflare (automatic once domain is added)
 - [ ] Contact form tested end-to-end on production URL
+- [ ] Turnstile widget created in CF Dashboard with correct hostnames
+- [ ] `TURNSTILE_SECRET_KEY` set in CF Pages environment variables (Production + Preview)
+- [ ] `VITE_TURNSTILE_SITE_KEY` added as GitHub secret
+- [ ] Contact form tested: widget appears, submit blocked until challenge passes, email received
 
 ---
 

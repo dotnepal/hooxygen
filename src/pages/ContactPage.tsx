@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
@@ -21,6 +21,18 @@ export const ssgOptions: SsgOptions = {
     return withSSGLayout(children, '/contact')
   },
 };
+
+// ─── Global Turnstile type ────────────────────────────────────────────────────
+
+declare global {
+  interface Window {
+    turnstile: {
+      render: (container: string | HTMLElement, options: Record<string, unknown>) => string
+      reset: (widgetId: string) => void
+      remove: (widgetId: string) => void
+    }
+  }
+}
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -86,6 +98,9 @@ function ContactHero() {
 function ContactForm() {
   const { t } = useTranslation()
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const widgetRef = useRef<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const {
     register,
@@ -94,21 +109,51 @@ function ContactForm() {
     reset,
   } = useForm<ContactFormData>()
 
+  useEffect(() => {
+    if (!containerRef.current || widgetRef.current) return
+
+    if (!window.turnstile) {
+      console.warn('[Turnstile] window.turnstile is not available yet. Widget will not mount.')
+      return
+    }
+
+    widgetRef.current = window.turnstile.render(containerRef.current, {
+      sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY,
+      theme: 'light',
+      callback: (token: string) => setTurnstileToken(token),
+      'expired-callback': () => setTurnstileToken(null),
+      'error-callback': () => setTurnstileToken(null),
+    })
+
+    return () => {
+      if (widgetRef.current) {
+        window.turnstile?.remove(widgetRef.current)
+        widgetRef.current = null
+      }
+    }
+  }, [])
+
   const onSubmit = async (data: ContactFormData) => {
-     try {
+    if (!turnstileToken) {
+      setStatus('error')
+      return
+    }
+    try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, turnstileToken }),
       })
       if (res.ok) {
         setStatus('success')
         reset()
+        setTurnstileToken(null)
+        if (widgetRef.current) window.turnstile?.reset(widgetRef.current)
       } else {
         setStatus('error')
+        if (widgetRef.current) window.turnstile?.reset(widgetRef.current)
       }
-    } catch(error: any) {
-      console.log(error);
+    } catch {
       setStatus('error')
     }
   }
@@ -254,11 +299,14 @@ function ContactForm() {
         />
       </div>
 
+      {/* Cloudflare Turnstile */}
+      <div ref={containerRef} className="min-h-[65px]" aria-label="Bot verification" />
+
       {/* Submit */}
       <Button
         type="submit"
         size="lg"
-        disabled={isSubmitting}
+        disabled={isSubmitting || !turnstileToken}
         className="w-full sm:w-auto"
       >
         {isSubmitting ? t('common.loading') : t('contact.form.submit')}

@@ -24,6 +24,7 @@ jobs:
         run: npm run build
         env:
           VITE_FORM_ENDPOINT: /api/contact
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
 
       - uses: actions/upload-artifact@v4
         with:
