@@ -1,3 +1,21 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Crawl-delay: 10
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Googlebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
 Sitemap: https://www.hooxygen.com.np/sitemap.xml

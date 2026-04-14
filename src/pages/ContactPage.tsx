@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
 import { Button, PageHero, SectionHeader } from '../components/ui'
+import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 
 export const ssgOptions: SsgOptions = {
   slug: 'contact',
@@ -14,6 +15,13 @@ export const ssgOptions: SsgOptions = {
         name="description"
         content="Get in touch with HO Oxygen Industries Pvt. Ltd. to place a gas order, request a quote, or ask about our services."
       />
+      {generatePageHead({
+        title: 'Contact Us — HO Oxygen Industries Pvt. Ltd.',
+        description: 'Get in touch with HO Oxygen Industries Pvt. Ltd. to place a gas order, request a quote, or ask about our services.',
+        url: '/contact',
+        keywords: 'contact us, gas inquiry, order cylinders Nepal',
+      })}
+      {generateStructuredData()}
     </>
   ),
   context: async (children) => {

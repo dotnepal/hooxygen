@@ -5,6 +5,7 @@ import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import SectionHeader from '../components/ui/SectionHeader'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 
 export const ssgOptions: SsgOptions = {
   slug: 'services',
@@ -16,6 +17,13 @@ export const ssgOptions: SsgOptions = {
         name="description"
         content="HO Oxygen offers cylinder rental, sales, refilling, bulk orders, same-day delivery, and customer pickup across Nepal."
       />
+      {generatePageHead({
+        title: 'Our Services — HO Oxygen',
+        description: 'HO Oxygen offers cylinder rental, sales, refilling, bulk orders, same-day delivery, and customer pickup across Nepal.',
+        url: '/services',
+        keywords: 'gas delivery Nepal, cylinder refill, bulk orders, rental, sales',
+      })}
+      {generateStructuredData()}
     </>
   ),
   context: async (children) => {

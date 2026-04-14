@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
 import { Badge, PageHero } from '../components/ui'
 import { FAQ_DATA, type FaqCategory } from '../data/faq'
+import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 
 export const ssgOptions: SsgOptions = {
   slug: 'faq',
@@ -14,6 +15,13 @@ export const ssgOptions: SsgOptions = {
         name="description"
         content="Frequently asked questions about gas safety, ordering, delivery, rental, and payment at HO Oxygen."
       />
+      {generatePageHead({
+        title: 'FAQ — HO Oxygen',
+        description: 'Frequently asked questions about gas safety, ordering, delivery, rental, and payment at HO Oxygen.',
+        url: '/faq',
+        keywords: 'gas safety, delivery time, cylinder rental FAQ, pricing',
+      })}
+      {generateStructuredData()}
     </>
   ),
   context: async (children) => {

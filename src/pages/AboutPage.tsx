@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
 import { Button, Badge, SectionHeader, PageHero } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 import hoOxygenAbout from '../assets/img/ho-oxygen-about-540x380.jpg'
 
 export const ssgOptions: SsgOptions = {
@@ -14,6 +15,13 @@ export const ssgOptions: SsgOptions = {
         name="description"
         content="Learn about HO Oxygen — our story, team, and commitment to safe, reliable gas supply across Nepal."
       />
+      {generatePageHead({
+        title: 'About Us — HO Oxygen',
+        description: 'Learn about HO Oxygen — our story, team, and commitment to safe, reliable gas supply across Nepal.',
+        url: '/about',
+        keywords: 'HO Oxygen, gas company Nepal, service areas, about us',
+      })}
+      {generateStructuredData()}
     </>
   ),
   context: async (children) => {

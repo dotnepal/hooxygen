@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
 import { Button, Card, Badge, SectionHeader } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 import HOHeroImage from '../assets/img/ho-heroimage-747x420.jpg'
 
 export const ssgOptions: SsgOptions = {
@@ -14,6 +15,13 @@ export const ssgOptions: SsgOptions = {
         name="description"
         content="HO Oxygen Industries Pvt. Ltd. provides reliable oxygen, nitrogen, and hydrogen gas supply for hospitals, medical facilities, and industrial users across Nepal."
       />
+      {generatePageHead({
+        title: 'HO Oxygen Industries Pvt. Ltd. — Reliable Gas Supply for Medical & Industrial Use across Nepal',
+        description: 'HO Oxygen Industries Pvt. Ltd. provides reliable oxygen, nitrogen, and hydrogen gas supply for hospitals, medical facilities, and industrial users across Nepal.',
+        url: '/',
+        keywords: 'oxygen supply Nepal, gas cylinders, medical gas, nitrogen, hydrogen',
+      })}
+      {generateStructuredData()}
     </>
   ),
   context: async (children) => {
