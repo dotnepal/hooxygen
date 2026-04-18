@@ -29,7 +29,7 @@ export default function LanguageToggle({
       onClick={handleToggle}
       aria-label={`Switch to ${nextLang === 'ne' ? 'Nepali' : 'English'}`}
       className={[
-        'inline-flex items-center justify-center min-w-[44px] min-h-[44px] px-3 py-1 rounded-md border font-body font-medium text-sm transition-colors',
+        'inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-md border font-body font-medium text-sm transition-colors px-2 py-2 sm:px-3 sm:py-1',
         transparent
           ? 'border-white/60 text-white hover:bg-white/15 hover:border-white'
           : 'border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white',

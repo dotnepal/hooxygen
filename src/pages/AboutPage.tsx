@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
-import { Button, Badge, SectionHeader, PageHero, PhoneLink } from '../components/ui'
+import hoOxygenAbout from '../assets/img/ho-oxygen-about-540x380.jpg'
+import { Badge, Button, PageHero, PhoneLink, SectionHeader } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
-import hoOxygenAbout from '../assets/img/ho-oxygen-about-540x380.jpg'
 
 export const ssgOptions: SsgOptions = {
   slug: 'about',
@@ -58,7 +58,7 @@ function CompanyStory() {
             {t('about.story.body')}
           </p>
           <div className="mt-8">
-            <Button as="a" href="/contact" size="md">
+            <Button as="a" href="/contact">
               {t('common.contactUs')}
             </Button>
           </div>
@@ -94,7 +94,7 @@ function ServiceAreas() {
   const badgesRef = useScrollAnimation<HTMLDivElement>({ stagger: 100 })
 
   return (
-    <section aria-label="Service Areas" className="py-16 px-6 bg-white">
+    <section aria-label="Service Areas" className="pt-0 pb-16 sm:pt-8 sm:pb-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div ref={headerRef} className="animate-on-scroll mb-10">
           <SectionHeader

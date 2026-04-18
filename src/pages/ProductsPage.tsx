@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
-import { Button, Card, SectionHeader, PageHero } from '../components/ui'
+import { Button, Card, PageHero, SectionHeader } from '../components/ui'
 import { PRODUCTS, type GasKey } from '../data/products'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
@@ -91,7 +91,7 @@ function GasTabs() {
 
   return (
     <section aria-label="Gas Products" className="bg-white">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-6 pt-12">
         {/* Tab bar */}
         <div className="flex border-b border-gray-200 overflow-x-auto" role="tablist" aria-label="Gas types">
           {PRODUCTS.map(({ key: gas }) => (
@@ -169,7 +169,7 @@ function GasTabs() {
                   ].join(' ')}>
                     {row.sale ? '✓' : '✗'} {t('products.table.sale')}
                   </span>
-                  <Button as="a" href="/contact" variant="outline" size="sm" className="ml-auto">
+                  <Button as="a" href="/contact" variant="outline" className="ml-auto">
                     {t('products.pricing.contact')}
                   </Button>
                 </div>
@@ -204,7 +204,7 @@ function GasTabs() {
                       {row.sale ? <span className="font-bold text-emerald-600">✓</span> : <span className="text-gray-600">✗</span>}
                     </td>
                     <td className="px-5 py-4">
-                      <Button as="a" href="/contact" variant="outline" size="sm">
+                      <Button as="a" href="/contact" variant="outline">
                         {t('products.pricing.contact')}
                       </Button>
                     </td>

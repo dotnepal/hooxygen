@@ -1,21 +1,27 @@
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
-import { Button, Card, Badge, SectionHeader, PhoneLink } from '../components/ui'
+import HOHeroImage from '../assets/img/ho-heroimage-747x420.jpg'
+import { Badge, Button, Card, PhoneLink, SectionHeader } from '../components/ui'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
-import HOHeroImage from '../assets/img/ho-heroimage-747x420.jpg'
 
 export const ssgOptions: SsgOptions = {
   slug: 'index',
   routeUrl: '/',
   Head: () => (
     <>
-      <title>HO Oxygen Industries Pvt. Ltd. — Reliable Gas Supply for Medical & Industrial Use across Nepal</title>
+      <title>
+        HO Oxygen Industries Pvt. Ltd. — Reliable Gas Supply for Medical & Industrial Use across
+        Nepal
+      </title>
       {generatePageHead({
-        title: 'HO Oxygen Industries Pvt. Ltd. — Reliable Gas Supply for Medical & Industrial Use across Nepal',
-        description: 'HO Oxygen Industries Pvt. Ltd. provides reliable oxygen, nitrogen, and hydrogen gas supply for hospitals, medical facilities, and industrial users across Nepal.',
+        title:
+          'HO Oxygen Industries Pvt. Ltd. — Reliable Gas Supply for Medical & Industrial Use across Nepal',
+        description:
+          'HO Oxygen Industries Pvt. Ltd. provides reliable oxygen, nitrogen, and hydrogen gas supply for hospitals, medical facilities, and industrial users across Nepal.',
         url: '/',
-        keywords: 'HO Oxygen Industries, oxygen supply Nepal, gas cylinders, medical gas, nitrogen, hydrogen, Nepalgunj gas supplier, Banke district',
+        keywords:
+          'HO Oxygen Industries, oxygen supply Nepal, gas cylinders, medical gas, nitrogen, hydrogen, Nepalgunj gas supplier, Banke district',
       })}
       {generateStructuredData()}
     </>
@@ -46,8 +52,7 @@ function HomeHero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage:
-            'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
           backgroundSize: '28px 28px',
         }}
       />
@@ -56,8 +61,7 @@ function HomeHero() {
         aria-hidden="true"
         className="pointer-events-none absolute -top-32 right-0 w-[500px] h-[500px] rounded-full"
         style={{
-          background:
-            'radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%)',
         }}
       />
 
@@ -70,22 +74,27 @@ function HomeHero() {
             {t('home.hero.subtitle')}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Button as="a" href="/contact" size="lg">
+            <Button as="a" href="/contact">
               {t('home.hero.cta.contact')}
             </Button>
-            <Button as="a" href="/products" variant="outline" size="lg" className="border-white text-white hover:bg-green hover:text-brand-blue">
+            <Button
+              as="a"
+              href="/products"
+              variant="outline"
+              className="border-white text-white hover:bg-green hover:text-brand-blue"
+            >
               {t('home.hero.cta.products')}
             </Button>
           </div>
         </div>
 
         {/* Hero image placeholder */}
-        <div className="hidden lg:flex justify-center">
+        <div className="justify-center">
           <img
             src={HOHeroImage}
             alt="HO Oxygen Industries gas production facility in Nepalgunj, Nepal"
             loading="eager"
-            className="rounded-2xl shadow-2xl"
+            className="rounded-2xl shadow-2xl scale-[1.05] sm:scale-[1.17] sm:ml-5 sm:mt-7.5"
             width={747}
             height={420}
           />
@@ -101,44 +110,48 @@ const GAS_ICONS = {
   oxygen: (
     <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
       <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">O₂</text>
+      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">
+        O₂
+      </text>
     </svg>
   ),
   nitrogen: (
     <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
       <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">N₂</text>
+      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">
+        N₂
+      </text>
     </svg>
   ),
   hydrogen: (
     <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
       <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">H₂</text>
+      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">
+        H₂
+      </text>
     </svg>
   ),
   carbondioxide: (
     <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
       <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="13" fill="currentColor" fontWeight="700">CO₂</text>
+      <text x="20" y="26" textAnchor="middle" fontSize="13" fill="currentColor" fontWeight="700">
+        CO₂
+      </text>
     </svg>
   ),
   argon: (
     <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
       <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">Ar</text>
+      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">
+        Ar
+      </text>
     </svg>
   ),
 }
 
 function GasHighlights() {
   const { t } = useTranslation()
-  const gases = [
-    'oxygen', 
-    'argon',
-    'carbondioxide', 
-    'hydrogen', 
-    'nitrogen', 
-  ] as const
+  const gases = ['oxygen', 'argon', 'carbondioxide', 'hydrogen', 'nitrogen'] as const
   const headerRef = useScrollAnimation<HTMLDivElement>()
   const gridRef = useScrollAnimation<HTMLDivElement>({ stagger: 120 })
 
@@ -154,10 +167,13 @@ function GasHighlights() {
         </div>
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {gases.map((gas) => (
-            <Card key={gas} hover as="article" className="animate-on-scroll flex flex-col items-start gap-4">
-              <div className="p-3 rounded-xl bg-brand-light text-brand-blue">
-                {GAS_ICONS[gas]}
-              </div>
+            <Card
+              key={gas}
+              hover
+              as="article"
+              className="animate-on-scroll flex flex-col items-start gap-4"
+            >
+              <div className="p-3 rounded-xl bg-brand-light text-brand-blue">{GAS_ICONS[gas]}</div>
               <div>
                 <h3 className="text-xl font-display font-bold text-brand-dark">
                   {t(`home.gas.${gas}.title`)}
@@ -166,7 +182,7 @@ function GasHighlights() {
                   {t(`home.gas.${gas}.desc`)}
                 </p>
               </div>
-              <Button as="a" href="/products" variant="ghost" size="sm" className="mt-auto -ml-2">
+              <Button as="a" href="/products" variant="ghost" className="mt-auto -ml-2">
                 {t('home.gas.learnMore')} →
               </Button>
             </Card>
@@ -194,19 +210,21 @@ function ServicesStrip() {
   return (
     <section
       aria-labelledby="services-heading"
-      className="py-12 px-6"
+      // className="py-12 px-6"
+      className="pt-12 sm:pt-20 pb-12 px-6"
       style={{ background: 'var(--color-brand-light)' }}
     >
       <div className="max-w-6xl mx-auto">
         <div ref={headerRef} className="animate-on-scroll mb-10">
-          <SectionHeader
-            title={t('home.services.sectionTitle')}
-            align="center"
-          />
+          <SectionHeader title={t('home.services.sectionTitle')} align="center" />
         </div>
         <div ref={badgesRef} className="flex flex-wrap justify-center gap-4">
           {services.map(({ key, icon }) => (
-            <Badge key={key} variant="primary" className="animate-on-scroll gap-2 px-5 py-3 text-base">
+            <Badge
+              key={key}
+              variant="primary"
+              className="animate-on-scroll gap-2 px-5 py-3 text-base"
+            >
               <span aria-hidden="true">{icon}</span>
               {t(`home.services.${key}`)}
             </Badge>
@@ -280,18 +298,11 @@ function CallNowCTA() {
   return (
     <section
       aria-label="Call now for immediate assistance"
-      className="py-16 px-6 bg-brand-light text-center"
+      className="py-16 px-6 pt-4 sm:pt-6 bg-brand-light text-center"
     >
       <div ref={ref} className="animate-on-scroll max-w-4xl mx-auto">
-        <p className="text-lg font-body text-brand-dark mb-6">
-          {t('cta.questions')}
-        </p>
-        <PhoneLink
-          phone="+9779858030326"
-          display={t('cta.callNow')}
-          className="inline-flex items-center gap-2 px-8 py-4 bg-brand-blue text-white font-display font-semibold rounded-lg hover:bg-brand-dark transition-all hover:shadow-lg text-lg"
-          icon={true}
-        />
+        <p className="text-lg font-body text-brand-dark mb-6">{t('cta.questions')}</p>
+        <PhoneLink phone="+9779858030326" display={t('cta.callNow')} icon={true} />
       </div>
     </section>
   )
@@ -320,7 +331,6 @@ function CTABanner() {
           <Button
             as="a"
             href="/contact"
-            size="lg"
             className="text-white border-0 shadow-lg bg-teal-700 hover:bg-teal-900"
           >
             {t('home.cta.button')}

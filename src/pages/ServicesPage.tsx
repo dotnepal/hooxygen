@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import type { SsgOptions } from 'vite-plugin-ssg/utils'
-import PageHero from '../components/ui/PageHero'
-import Card from '../components/ui/Card'
-import Button from '../components/ui/Button'
-import SectionHeader from '../components/ui/SectionHeader'
 import { PhoneLink } from '../components/ui'
+import Card from '../components/ui/Card'
+import PageHero from '../components/ui/PageHero'
+import SectionHeader from '../components/ui/SectionHeader'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { generatePageHead, generateStructuredData } from '../utils/seoHelpers'
 
@@ -16,9 +15,11 @@ export const ssgOptions: SsgOptions = {
       <title>Our Services — HO Oxygen</title>
       {generatePageHead({
         title: 'Our Services — HO Oxygen',
-        description: 'HO Oxygen offers cylinder rental, sales, refilling, bulk orders, same-day delivery, and customer pickup across Nepal.',
+        description:
+          'HO Oxygen offers cylinder rental, sales, refilling, bulk orders, same-day delivery, and customer pickup across Nepal.',
         url: '/services',
-        keywords: 'gas delivery Nepal, cylinder refill, bulk orders, rental, sales, Nepalgunj delivery, same-day gas delivery, cylinder pickup',
+        keywords:
+          'gas delivery Nepal, cylinder refill, bulk orders, rental, sales, Nepalgunj delivery, same-day gas delivery, cylinder pickup',
       })}
       {generateStructuredData()}
     </>
@@ -33,7 +34,17 @@ export const ssgOptions: SsgOptions = {
 
 function RentIcon() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <path d="M12 2L2 7l10 5 10-5-10-5z" />
       <path d="M2 17l10 5 10-5" />
       <path d="M2 12l10 5 10-5" />
@@ -43,7 +54,17 @@ function RentIcon() {
 
 function SaleIcon() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <circle cx="9" cy="21" r="1" />
       <circle cx="20" cy="21" r="1" />
       <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
@@ -53,7 +74,17 @@ function SaleIcon() {
 
 function RefillingIcon() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <polyline points="23 4 23 10 17 10" />
       <polyline points="1 20 1 14 7 14" />
       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
@@ -63,7 +94,17 @@ function RefillingIcon() {
 
 function BulkIcon() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <rect x="1" y="3" width="15" height="13" rx="2" />
       <path d="M16 8h4l3 3v5h-7V8z" />
       <circle cx="5.5" cy="18.5" r="2.5" />
@@ -74,7 +115,17 @@ function BulkIcon() {
 
 function DeliveryIcon() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
     </svg>
@@ -83,7 +134,17 @@ function DeliveryIcon() {
 
 function PickupIcon() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
       <circle cx="12" cy="10" r="3" />
     </svg>
@@ -161,20 +222,19 @@ function WhyChooseUs() {
   const gridRef = useScrollAnimation<HTMLDivElement>({ stagger: 100 })
 
   return (
-    <section
-      aria-label="Why Choose Us"
-      className="py-20 px-6 bg-white"
-    >
+    <section aria-label="Why Choose Us" className="py-20 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div ref={headerRef} className="animate-on-scroll mb-12">
-          <SectionHeader
-            title={t('about.whyUs.title')}
-            align="center"
-          />
+          <SectionHeader title={t('about.whyUs.title')} align="center" />
         </div>
         <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {items.map((item) => (
-            <Card key={item} hover as="article" className="animate-on-scroll flex flex-col items-start gap-4">
+            <Card
+              key={item}
+              hover
+              as="article"
+              className="animate-on-scroll flex flex-col items-start gap-4"
+            >
               <div className="p-3 rounded-xl bg-brand-light text-brand-blue">
                 {WHY_US_ICONS[item]}
               </div>
@@ -203,10 +263,7 @@ export default function ServicesPage() {
   return (
     <main id="main-content">
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <PageHero
-        title={t('services.hero.title')}
-        subtitle={t('services.hero.subtitle')}
-      />
+      <PageHero title={t('services.hero.title')} subtitle={t('services.hero.subtitle')} />
 
       {/* ── Services grid ────────────────────────────────────────── */}
       <section
@@ -214,14 +271,9 @@ export default function ServicesPage() {
         aria-labelledby="services-heading"
         className="max-w-6xl mx-auto px-6 py-16 sm:py-20"
       >
-        <SectionHeader
-          title={t('services.sectionTitle')}
-        />
+        <SectionHeader title={t('services.sectionTitle')} />
 
-        <div
-          ref={cardsRef}
-          className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+        <div ref={cardsRef} className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {SERVICE_KEYS.map((key, i) => {
             const Icon = SERVICE_ICONS[i]
             return (
@@ -246,10 +298,7 @@ export default function ServicesPage() {
       </section>
 
       {/* ── CTA Banner ───────────────────────────────────────────── */}
-      <section
-        aria-label="Call to action"
-        className="bg-brand-light"
-      >
+      <section aria-label="Call to action" className="bg-brand-light">
         <div className="max-w-4xl mx-auto px-6 py-16 text-center">
           <h2 className="font-display font-bold text-brand-dark text-3xl sm:text-4xl leading-tight">
             {t('services.cta.title')}
@@ -258,10 +307,6 @@ export default function ServicesPage() {
             {t('services.cta.subtitle')}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button as="a" href="/contact" size="lg" variant="primary">
-              {t('services.cta.button')}
-            </Button>
-            <span className="text-brand-steel">or</span>
             <PhoneLink
               phone="+9779858030326"
               display={t('cta.callNow')}
