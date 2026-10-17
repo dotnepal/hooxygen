@@ -4,6 +4,22 @@ All notable changes to the HO Oxygen website are recorded here in reverse-chrono
 
 ---
 
+## 2026-10-17 — Add 404 page; serve unknown URLs with HTTP 404
+
+**Affected files:**
+- `src/pages/NotFoundPage.tsx` (new) — SSG-prerendered to `dist/404.html`, noindex
+- `src/App.tsx` — catch-all `*` route renders NotFoundPage; shared `PageFallback` spinner
+- `src/utils/seoHelpers.tsx` — optional `noindex` flag (no canonical/hreflang, `noindex, follow`)
+- `src/i18n/en.json`, `src/i18n/np.json` — `notFound` strings
+- `public/_redirects` — removed `/* /index.html 200` SPA catch-all
+
+**Changes:**
+- Unknown URLs previously got index.html with HTTP 200 and React Router's default error screen; Cloudflare Pages now serves `404.html` with HTTP 404
+- All real routes are pre-rendered as .html, so the SPA fallback is unnecessary
+- 404 is not in `ROUTES` or the sitemap
+
+---
+
 ## 2026-04-14 — Callable phone links + "Call Now" CTAs for improved mobile UX
 
 ### New PhoneLink component + callable tel: links across site

@@ -254,5 +254,17 @@
     "talkToExpert": "Talk to an expert",
     "speakWithUs": "Speak with us",
     "questions": "Questions? Call us now"
+  },
+  "notFound": {
+    "hero": {
+      "title": "404 — Page Not Found",
+      "subtitle": "Sorry, the page you're looking for doesn't exist or has moved."
+    },
+    "message": "The link may be broken or the page may have been removed. Head back to the homepage or get in touch and we'll help you find what you need.",
+    "home": "Go to Homepage",
+    "contact": "Contact Us",
+    "browse": "Or browse:",
+    "products": "Products",
+    "services": "Services"
   }
 }

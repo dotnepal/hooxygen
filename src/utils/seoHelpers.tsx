@@ -7,6 +7,8 @@ interface SeoMetadata {
   image?: string
   type?: string
   keywords?: string
+  /** Emit noindex and skip canonical/hreflang (e.g. the 404 page). */
+  noindex?: boolean
 }
 
 export function generateHreflangTags(url: string) {
@@ -46,14 +48,12 @@ export function generatePageHead(metadata: SeoMetadata) {
       <meta name="twitter:description" content={metadata.description} />
       <meta name="twitter:image" content={image} />
 
-      {/* Canonical Link */}
-      <link rel="canonical" href={absoluteUrl} />
-
-      {/* Hreflang Tags for Bilingual Support */}
-      {generateHreflangTags(metadata.url)}
+      {/* Canonical Link + Hreflang Tags for Bilingual Support */}
+      {!metadata.noindex && <link rel="canonical" href={absoluteUrl} />}
+      {!metadata.noindex && generateHreflangTags(metadata.url)}
 
       {/* Robots & Additional SEO */}
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content={metadata.noindex ? 'noindex, follow' : 'index, follow'} />
       {metadata.keywords && <meta name="keywords" content={metadata.keywords} />}
     </Fragment>
   )

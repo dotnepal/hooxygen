@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -37,25 +37,40 @@ function RootLayout() {
   )
 }
 
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+
+function PageFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
+    </div>
+  )
+}
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
-    children: ROUTES.map((route) => ({
-      path: route.path === '/' ? undefined : route.path,
-      index: route.path === '/',
-      element: (
-        <Suspense
-          fallback={
-            <div className="min-h-screen flex items-center justify-center">
-              <div className="w-8 h-8 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
-            </div>
-          }
-        >
-          <route.component />
-        </Suspense>
-      ),
-    })),
+    children: [
+      ...ROUTES.map((route) => ({
+        path: route.path === '/' ? undefined : route.path,
+        index: route.path === '/',
+        element: (
+          <Suspense fallback={<PageFallback />}>
+            <route.component />
+          </Suspense>
+        ),
+      })),
+      // Catch-all: unknown client-side URLs render the 404 page
+      {
+        path: '*',
+        element: (
+          <Suspense fallback={<PageFallback />}>
+            <NotFoundPage />
+          </Suspense>
+        ),
+      },
+    ],
   },
 ])
 
