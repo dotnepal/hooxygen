@@ -1,6 +1,6 @@
 # HO Oxygen — Deployment Specification
 
-**Last updated:** 2026-0414-
+**Last updated:** 2026-10-17
 
 ---
 
@@ -23,6 +23,34 @@ Developer → PR to main → GitHub Actions (build + deploy Worker + deploy Page
 |-----|---------|-------|
 | `build` | All PRs + push to main | checkout → setup Node 20 → `npm ci` → `npm run build` → upload artifact |
 | `deploy` | Push to `main` only | download artifact → `wrangler deploy` for `workers/contact-mailer` → `wrangler pages deploy dist` |
+
+GitHub Actions is the **only** production deploy path.
+
+---
+
+## Branch Previews (Cloudflare Workers Builds)
+
+A Workers Builds Git connection on the Worker `hooxygen` deploys a Pages **preview** for every non-`main` branch. It shows up on PRs as the `Workers Builds: hooxygen` check.
+
+| Setting | Value |
+|---------|-------|
+| Trigger | `Deploy non-production branches` |
+| Branches | include `*`, exclude `main` |
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler pages deploy --branch=$WORKERS_CI_BRANCH` |
+
+- Preview URL: `https://<deployment-id>.ho-gas-factory.pages.dev` (listed by `npx wrangler pages deployment list --project-name=ho-gas-factory`)
+- `--branch=$WORKERS_CI_BRANCH` is required: Workers Builds checks out a detached HEAD, so without it the deploy is labelled `HEAD`
+- Do **not** use `npx wrangler versions upload` here — it expects a Worker script or `[assets]` in `wrangler.toml` and always fails for this Pages project
+- There is intentionally **no** `main` trigger (removed 2026-10-17); it duplicated GitHub Actions and skipped the SEO check and mailer deploy
+
+Inspect or change the trigger with the `cf` CLI:
+```bash
+cf workers scripts search --name hooxygen                      # get the Worker tag (id)
+cf builds triggers list --external-script-id <worker-tag>      # show triggers
+cf builds triggers update <trigger-uuid> --deploy-command '...' # change a command
+cf builds create <trigger-uuid> --branch <branch>              # re-run a branch build
+```
 
 ---
 

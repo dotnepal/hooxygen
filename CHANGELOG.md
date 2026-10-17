@@ -4,6 +4,17 @@ All notable changes to the HO Oxygen website are recorded here in reverse-chrono
 
 ---
 
+## 2026-10-17 — Fix Workers Builds branch deploys; document previews
+
+**Affected:** Cloudflare Workers Builds triggers on Worker `hooxygen` (dashboard/API, not in repo), `runbooks/DEPLOY.md`
+
+**Changes:**
+- Branch trigger deploy command `npx wrangler versions upload` (always failed for this Pages project) → `npx wrangler pages deploy --branch=$WORKERS_CI_BRANCH`, giving PRs a Pages preview
+- Removed the Workers Builds `main` trigger; it created a redundant `HEAD` preview on every main push. GitHub Actions is the only production deploy path
+- Added a "Branch Previews" section to the deploy runbook
+
+---
+
 ## 2026-10-17 — Docs: remove stale SPA-fallback references
 
 **Affected files:** `CLAUDE.md`, `runbooks/DEPLOY.md`, `docs/ARCHITECTURE-DECISION.md`, `tasks/1-FEATURES.md`
