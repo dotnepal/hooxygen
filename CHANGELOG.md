@@ -4,6 +4,45 @@ All notable changes to the HO Oxygen website are recorded here in reverse-chrono
 
 ---
 
+## 2026-10-17 — Fix Workers Builds branch deploys; document previews
+
+**Affected:** Cloudflare Workers Builds triggers on Worker `hooxygen` (dashboard/API, not in repo), `runbooks/DEPLOY.md`
+
+**Changes:**
+- Branch trigger deploy command `npx wrangler versions upload` (always failed for this Pages project) → `npx wrangler pages deploy --branch=$WORKERS_CI_BRANCH`, giving PRs a Pages preview
+- Removed the Workers Builds `main` trigger; it created a redundant `HEAD` preview on every main push. GitHub Actions is the only production deploy path
+- Added a "Branch Previews" section to the deploy runbook
+
+---
+
+## 2026-10-17 — Docs: remove stale SPA-fallback references
+
+**Affected files:** `CLAUDE.md`, `runbooks/DEPLOY.md`, `docs/ARCHITECTURE-DECISION.md`, `tasks/1-FEATURES.md`
+
+**Changes:**
+- Replaced references to the `/* /index.html 200` SPA fallback with the 404.html behaviour
+- Added `NotFoundPage` to file listings and the `noindex` option to the `generatePageHead()` description
+- Added a post-deploy 404 status check to the deploy runbook
+- Corrected `dist/` output paths in `docs/ARCHITECTURE-DECISION.md` to the flat `<slug>.html` files the build actually produces (was `about/index.html` style)
+
+---
+
+## 2026-10-17 — Add 404 page; serve unknown URLs with HTTP 404
+
+**Affected files:**
+- `src/pages/NotFoundPage.tsx` (new) — SSG-prerendered to `dist/404.html`, noindex
+- `src/App.tsx` — catch-all `*` route renders NotFoundPage; shared `PageFallback` spinner
+- `src/utils/seoHelpers.tsx` — optional `noindex` flag (no canonical/hreflang, `noindex, follow`)
+- `src/i18n/en.json`, `src/i18n/np.json` — `notFound` strings
+- `public/_redirects` — removed `/* /index.html 200` SPA catch-all
+
+**Changes:**
+- Unknown URLs previously got index.html with HTTP 200 and React Router's default error screen; Cloudflare Pages now serves `404.html` with HTTP 404
+- All real routes are pre-rendered as .html, so the SPA fallback is unnecessary
+- 404 is not in `ROUTES` or the sitemap
+
+---
+
 ## 2026-04-14 — Callable phone links + "Call Now" CTAs for improved mobile UX
 
 ### New PhoneLink component + callable tel: links across site

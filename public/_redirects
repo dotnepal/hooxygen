@@ -1,1 +1,3 @@
-/*    /index.html    200
+# No SPA catch-all on purpose: every route is pre-rendered to its own .html file by SSG,
+# so Cloudflare Pages serves them natively. Without a catch-all rule, unknown URLs get
+# 404.html with HTTP 404 instead of index.html with HTTP 200.
