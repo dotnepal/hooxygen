@@ -15,7 +15,7 @@
 5. [ADR-002: Tailwind CSS v4 over v3](#adr-002-tailwind-css-v4-over-v3)
 6. [ADR-003: i18n — Bundled Translations over HTTP Backend](#adr-003-i18n--bundled-translations-over-http-backend)
 7. [ADR-004: Animation — Selective Motion + CSS Keyframes](#adr-004-animation--selective-motion--css-keyframes)
-8. [ADR-005: Form Submission — Cloudflare Pages Function with Web3Forms Fallback](#adr-005-form-submission--cloudflare-pages-function-with-web3forms-fallback)
+8. [ADR-005: Form Submission — Cloudflare Pages Function with Contact Mailer Worker](#adr-005-form-submission--cloudflare-pages-function-with-contact-mailer-worker)
 9. [ADR-006: Component Architecture — Flat + Section-Scoped](#adr-006-component-architecture--flat--section-scoped)
 10. [ADR-007: Routing — Centralized Route Manifest](#adr-007-routing--centralized-route-manifest)
 11. [Data Layer Design](#11-data-layer-design)
@@ -98,7 +98,8 @@ This is a **static informational website** for HO Oxygen in Nepal. As of 2026-04
 │                                                                   │
 │  Static assets → served from CDN (global edge)                   │
 │  POST /api/contact → Cloudflare Pages Function (Workers runtime) │
-│                      → forwards to Web3Forms API → email inbox   │
+│                      → Turnstile check → CONTACT_MAILER Worker  │
+│                      → send_email → email inbox                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -112,9 +113,9 @@ This is a **static informational website** for HO Oxygen in Nepal. As of 2026-04
 **Request flow for form submission:**
 1. User fills contact form → clicks Submit
 2. `react-hook-form` validates client-side → shows inline errors if invalid
-3. On valid submission: POST to `VITE_FORM_ENDPOINT` (Cloudflare Pages Function at `/api/contact`)
-4. If env var not set (local dev): fallback POST directly to Web3Forms API
-5. Success/error toast rendered in-place
+3. On valid submission (with a Turnstile token): POST to `/api/contact` (Cloudflare Pages Function)
+4. The Function verifies Turnstile, validates, and hands off to the `contact-mailer` Worker, which sends the email
+5. Success/error status rendered in-place
 
 ---
 
@@ -217,7 +218,7 @@ ho-gas-factory/
 │   │       └── np.json                 # All Nepali strings
 │   │
 │   └── lib/
-│       └── submitForm.ts              # Form submission abstraction (CF Function + Web3Forms fallback)
+│       └── .gitkeep                   # lib/ is empty; ContactPage POSTs to /api/contact directly
 │
 ├── tasks/
 │   ├── 1-FEATURES.md                   # Feature breakdown with ASCII wireframes
@@ -431,51 +432,37 @@ Two animation libraries were considered: Motion (formerly Framer Motion) and pur
 
 ---
 
-## ADR-005: Form Submission — Cloudflare Pages Function with Web3Forms Fallback
+## ADR-005: Form Submission — Cloudflare Pages Function with Contact Mailer Worker
 
-**Status:** Decided
+**Status:** Decided (supersedes the earlier Web3Forms design; Web3Forms is no longer used)
 
 **Context:**
-The contact form must send inquiry data to a single email inbox. Options: Cloudflare Pages Function, third-party form service (Web3Forms, Formspree), or email API (Resend, SendGrid).
+The contact form must send inquiry data to a single email inbox, with bot protection. Options: Cloudflare Pages Function calling a third-party form service (Web3Forms, Formspree), an email API (Resend, SendGrid), or Cloudflare's own `send_email` binding.
 
-**Decision: Cloudflare Pages Function as primary, Web3Forms as fallback**
+**Decision: Pages Function + Turnstile, delivering via a dedicated `contact-mailer` Worker**
 
-**Primary path (production):**
 ```
-Browser → POST /api/contact
-         → functions/api/contact.ts (Cloudflare Workers runtime)
-         → Web3Forms API (HTTP fetch with API key from CF env var)
-         → Email delivered to inbox
-```
-
-**Fallback path (local dev or if CF function not configured):**
-```
-Browser → POST directly to https://api.web3forms.com/submit
-         (with access_key from VITE_WEB3FORMS_KEY env var)
-         → Email delivered to inbox
+Browser → POST /api/contact (JSON + Turnstile token)
+         → functions/api/contact.ts (Pages Function)
+              1. verify Turnstile token (siteverify, secret = TURNSTILE_SECRET_KEY)
+              2. validate + trim fields
+              3. CONTACT_MAILER.fetch(...)   ← service binding
+         → workers/contact-mailer/src/index.js
+              → env.CONTACT_EMAIL.send(...)  ← Cloudflare `send_email` binding
+         → Email delivered to info@hooxygen.com.np
 ```
 
 **`functions/api/contact.ts` responsibilities:**
-1. Accept `POST` with JSON body
-2. Validate required fields server-side (name, email, phone, company)
-3. Sanitize inputs (trim whitespace, basic XSS prevention)
-4. Forward to Web3Forms API
-5. Return `{ success: true }` or `{ success: false, error: "..." }`
+1. Accept `POST` with `application/json` only (415 otherwise)
+2. Verify the Turnstile token (403 if the bot check fails)
+3. Validate required fields server-side (name, email, phone, company) and the email format
+4. Trim inputs and build the normalized payload
+5. Forward to the `CONTACT_MAILER` service binding (503 if not configured, 500 if delivery fails)
+6. Return `{ success: true }` or `{ success: false, error: "..." }`
 
-**`src/lib/submitForm.ts` client abstraction:**
-```ts
-export async function submitForm(data: ContactFormData): Promise<void> {
-  const endpoint = import.meta.env.VITE_FORM_ENDPOINT ?? 'https://api.web3forms.com/submit';
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error('Submission failed');
-}
-```
+**Client:** `ContactPage.tsx` POSTs directly to `/api/contact`. There is no `src/lib/submitForm.ts` abstraction, and no direct-to-third-party fallback for local dev (use `npm run cf:dev` to run the Function locally).
 
-**TypeScript note:** `functions/api/contact.ts` uses the Cloudflare Workers runtime, not the DOM. It needs `/// <reference types="@cloudflare/workers-types" />` at the top, or a separate `tsconfig.functions.json` that extends the root config and adds `@cloudflare/workers-types`.
+**TypeScript note:** `functions/api/contact.ts` uses the Cloudflare Workers runtime, not the DOM. It needs `/// <reference types="@cloudflare/workers-types" />` at the top.
 
 ---
 
@@ -830,56 +817,51 @@ react-hook-form validates
       │
    valid
       ▼
-submitForm(data) called
+Turnstile token present? ──► NO ──► show error status, stop
       │
-      ├── VITE_FORM_ENDPOINT set?
-      │         │
-      │        YES ──► POST /api/contact (Cloudflare Pages Function)
-      │                      │
-      │                      ├── validate server-side
-      │                      ├── sanitize inputs
-      │                      └── POST to Web3Forms API ──► email delivered
+     YES
+      ▼
+POST /api/contact (Cloudflare Pages Function)
       │
-      └── NO (local dev) ──► POST https://api.web3forms.com/submit directly
-                                    └── email delivered
+      ├── verify Turnstile token  ──► fail: 403
+      ├── validate required fields + email format ──► fail: 400
+      └── CONTACT_MAILER service binding ──► contact-mailer Worker
+                                                └── send_email ──► inbox
       │
       ▼
-  success? ──► show success toast, reset form
-  error?   ──► show error toast, preserve form data
+  success? ──► show success status, reset form + Turnstile widget
+  error?   ──► show error status, preserve form data, reset Turnstile widget
 ```
 
-**Cloudflare Pages Function (`functions/api/contact.ts`):**
+**Client submit handler (`src/pages/ContactPage.tsx`):**
 ```ts
-/// <reference types="@cloudflare/workers-types" />
-
-export interface Env {
-  WEB3FORMS_KEY: string;
-}
-
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  const data = await request.json() as Record<string, unknown>;
-
-  // Server-side validation
-  const required = ['name', 'email', 'phone', 'company'];
-  for (const field of required) {
-    if (!data[field] || typeof data[field] !== 'string' || !data[field].trim()) {
-      return Response.json({ success: false, error: `${field} is required` }, { status: 400 });
+const onSubmit = async (data: ContactFormData) => {
+  if (!turnstileToken) {
+    setStatus('error')
+    return
+  }
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...data, turnstileToken }),
+    })
+    if (res.ok) {
+      setStatus('success')
+      reset()
+      setTurnstileToken(null)
+      if (widgetRef.current) window.turnstile?.reset(widgetRef.current)
+    } else {
+      setStatus('error')
+      if (widgetRef.current) window.turnstile?.reset(widgetRef.current)
     }
+  } catch {
+    setStatus('error')
   }
-
-  // Forward to Web3Forms
-  const response = await fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ access_key: env.WEB3FORMS_KEY, ...data }),
-  });
-
-  if (!response.ok) {
-    return Response.json({ success: false, error: 'Email delivery failed' }, { status: 500 });
-  }
-  return Response.json({ success: true });
-};
+}
 ```
+
+**Pages Function and mailer:** see ADR-005 and `functions/api/contact.ts`; the mailer Worker is `workers/contact-mailer/src/index.js`. Required config is listed in `runbooks/DEPLOY.md` (`TURNSTILE_SECRET_KEY`, `VITE_TURNSTILE_SITE_KEY`, `CONTACT_MAILER` binding).
 
 ---
 
@@ -914,7 +896,9 @@ pages_build_output_dir = "dist"
 - `CLOUDFLARE_ACCOUNT_ID` — CF account ID
 
 **Cloudflare Pages environment variables (set in CF dashboard):**
-- `WEB3FORMS_KEY` — Web3Forms API key for form submission
+- `TURNSTILE_SECRET_KEY` — Turnstile secret for server-side token verification
+- Service binding `CONTACT_MAILER` → Worker `contact-mailer` (see `wrangler.toml`)
+- Full list: `runbooks/DEPLOY.md`
 
 **`public/_redirects`:** comment only — no `/* /index.html 200` catch-all (removed 2026-10-17), so Cloudflare Pages serves `dist/404.html` with HTTP 404 for unknown URLs.
 
@@ -1145,7 +1129,7 @@ src/hooks/useIntersectionObserver.ts
 | Google Maps embed blocked by CSP | Low | Low | Add `maps.googleapis.com` to `Content-Security-Policy` header in CF Pages |
 | Motion bundle too large | Low | Low | Motion is tree-shakeable; only import used components; verify bundle size after F-012 |
 | Accordion animation broken in Safari | Medium | Low | Test `grid-template-rows` transition in Safari; fallback to `max-height: 500px` with `overflow: hidden` if needed |
-| Form submission fails due to CORS | Low | High | Cloudflare Pages Function runs same-origin; Web3Forms CORS is open; no CORS issue expected |
+| Form submission fails due to CORS | Low | High | Cloudflare Pages Function runs same-origin; no CORS issue expected |
 | SSG pre-render fails on dynamic components (tabs, accordion) | Medium | Medium | SSR-safe initial state: first tab shown by default; accordion all collapsed by default; no `window` access at render time |
 
 ---

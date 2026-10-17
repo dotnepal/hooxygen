@@ -240,7 +240,7 @@ For each cylinder size, display:
 - **Forms:** react-hook-form (client-side validation)
 - **Animations:** Motion library (React) for hero staggered reveals; CSS @keyframes + Intersection Observer for scroll effects
 - **Hosting:** Cloudflare Pages
-- **Form submission:** Cloudflare Pages Functions (`/api/contact`) with Web3Forms API integration
+- **Form submission:** Cloudflare Pages Function (`/api/contact`, Turnstile-protected) → `contact-mailer` Worker (service binding) → Cloudflare Email Routing
 - **Domain & SSL:** Cloudflare
 
 ### 7.3 Accessibility & SEO

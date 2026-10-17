@@ -12,11 +12,10 @@
 - `tasks/1-FEATURES.md` — feature breakdown with ASCII wireframes and task items (F-001 to F-016, all complete)
 - `runbooks/DEPLOY.md` — deployment specification and runbook (secrets, env vars, manual deploy, rollback)
 - `.github/workflows/deploy.yml` — GitHub Actions CI/CD (build on PRs, deploy to CF Pages on main)
-- `tasks/ARCHITECTURE-DECISION.md` — detailed architecture and system design decisions
-- `tasks/lessons.md` — lessons learned during implementation
+- `docs/ARCHITECTURE-DECISION.md` — detailed architecture and system design decisions
+- `runbooks/lessons.md` — lessons learned during implementation
 - `docs/1-INITIAL-SPECIFICATION.md` — full original specification document
-- `docs/SKILLS.md` — frontend aesthetic guidelines (fonts, motion, spatial composition)
-- `docs/4-FIX-GAS-ICONS-REMOVE-WEIGHT.md` — spec + root cause analysis for gas icon and weight column fixes
+- `docs/FRONTEND-GUIDELINES.md` — frontend aesthetic guidelines (fonts, motion, spatial composition)
 - `package.json`, `vite.config.ts`, `tsconfig.json` — build configuration
 - `index.html` — entry HTML with Google Fonts preconnect
 - `src/main.tsx` — React 19 entry point
@@ -400,8 +399,8 @@ The CI/CD pipeline (`deploy.yml`) then:
   - Phase 3: Image optimization, keyword expansion, alt text
   - Phase 4: CI/CD validation, dynamic sitemap generation
   - All 6 pages optimized for search engines and AI crawlers
-  - Tasks tracked in `tasks/SEO.md`
-**Phase 4:** Backend integration (contact form, email notifications) — IN PROGRESS
+**Phase 4:** Backend integration (contact form, email notifications) — ✓ COMPLETE
+  - Contact form → Pages Function (Turnstile + validation) → `contact-mailer` Worker (service binding) → Cloudflare Email Routing
 **Phase 5:** Testing and QA
 **Phase 6:** Production launch
 **Phase 7:** Post-launch optimizations and monitoring
@@ -429,7 +428,7 @@ See `CHANGELOG.md` for the full history of changes, bug fixes, and feature compl
 - One tack per subagent for focused execution
 
 ### 10.3 Self-Improvement Loop
-- After ANY correction from the user: update `tasks/lessons.md` with the pattern
+- After ANY correction from the user: update `runbooks/lessons.md` with the pattern
 - Write rules for yourself that prevent the same mistake
 - Ruthlessly iterate on these lessons until mistake rate drops
 - Review lessons at session start for relevant project
@@ -453,12 +452,12 @@ See `CHANGELOG.md` for the full history of changes, bug fixes, and feature compl
 - Go fix failing CI tests without being told how
 
 ### 10.7 Task Management
-1. **Plan First**: Write plan to `tasks/todo.md` with checkable items
+1. **Plan First**: Write plan to `tasks/todo.md` (create if missing) with checkable items
 2. **Verify Plan**: Check in before starting implementation
 3. **Track Progress**: Mark items complete as you go
 4. **Explain Changes**: High-level summary at each step
 5. **Document Result**: Add review section to `tasks/todo.md`
-5. **Capture Lessons**: Update `tasks/lessons.md` after corrections
+5. **Capture Lessons**: Update `runbooks/lessons.md` after corrections
 
 ---
 
