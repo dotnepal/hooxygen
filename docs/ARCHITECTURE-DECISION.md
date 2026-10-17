@@ -80,13 +80,14 @@ This is a **static informational website** for HO Oxygen in Nepal. As of 2026-04
 │                     dist/ (Static Output)                         │
 │                                                                   │
 │  index.html            → Home page (pre-rendered)                │
-│  about/index.html      → About page (pre-rendered)               │
-│  products/index.html   → Products page (pre-rendered)            │
-│  services/index.html   → Services page (pre-rendered)            │
-│  contact/index.html    → Contact page (pre-rendered)             │
-│  faq/index.html        → FAQ page (pre-rendered)                 │
+│  about.html            → About page (pre-rendered)               │
+│  products.html         → Products page (pre-rendered)            │
+│  services.html         → Services page (pre-rendered)            │
+│  contact.html          → Contact page (pre-rendered)             │
+│  faq.html              → FAQ page (pre-rendered)                 │
 │  assets/               → Hashed JS + CSS bundles                 │
-│  _redirects            → SPA fallback rule                       │
+│  404.html              → Not-found page (HTTP 404)               │
+│  _redirects            → Comment only (no SPA catch-all)         │
 │  robots.txt            → Search engine directives                │
 │  sitemap.xml           → All 6 page URLs with hreflang tags      │
 └───────────────────────┬─────────────────────────────────────────┘
@@ -103,7 +104,7 @@ This is a **static informational website** for HO Oxygen in Nepal. As of 2026-04
 
 **Request flow for a page visit:**
 1. User visits `https://hooxygen.com.np/about`
-2. Cloudflare CDN serves `about/index.html` from the nearest edge node (pre-rendered HTML, fully parseable without JS)
+2. Cloudflare CDN serves `about.html` (for `/about`) from the nearest edge node (pre-rendered HTML, fully parseable without JS)
 3. Browser downloads the JS bundle → React hydrates the existing DOM (no re-render from scratch)
 4. i18n initializes: `i18next-browser-languagedetector` reads `localStorage` → if Nepali, swaps all strings client-side
 5. Motion library boots: hero animations trigger on load; Intersection Observer activates for scroll sections
@@ -135,7 +136,7 @@ ho-gas-factory/
 │       └── contact.ts                  # POST /api/contact — form submission handler
 │
 ├── public/                             # Copied verbatim into dist/ at build time
-│   ├── _redirects                      # /* /index.html 200 (SPA fallback for CF Pages)
+│   ├── _redirects                      # Comment only — no SPA catch-all, so CF Pages serves 404.html with HTTP 404
 │   ├── robots.txt                      # Search engine directives with AI bot allow-list
 │   └── sitemap.xml                     # Reference sitemap (overwritten at build time)
 │
@@ -152,7 +153,8 @@ ho-gas-factory/
 │   │   ├── ProductsPage.tsx
 │   │   ├── ServicesPage.tsx
 │   │   ├── ContactPage.tsx
-│   │   └── FAQPage.tsx
+│   │   ├── FAQPage.tsx
+│   │   └── NotFoundPage.tsx            # 404 page — SSG slug '404' → dist/404.html; also the router's '*' route
 │   │
 │   ├── components/
 │   │   ├── ui/                         # Design system primitives (no business logic)
@@ -267,7 +269,7 @@ This site has 6 pages with static content: Home, About, Products, Services, Cont
 
 **Decision: SSG**
 
-Pre-render all 5 routes to static HTML at build time. Deploy to Cloudflare Pages CDN. Each page URL produces a real HTML file (`/about/index.html`) with all content visible to search engines and parseable without JavaScript.
+Pre-render all 6 routes (plus the 404 page) to static HTML at build time. Deploy to Cloudflare Pages CDN. Each page URL produces a real HTML file (`/about` → `dist/about.html`) with all content visible to search engines and parseable without JavaScript.
 
 **Implementation (confirmed working as of F-001):**
 - `vite-plugin-ssg` v0.1.0 is confirmed compatible with Vite 5 + React 19 (requires React 19 for `react-dom/static`'s `prerenderToNodeStream` API — React 18 is NOT sufficient).
@@ -275,7 +277,7 @@ Pre-render all 5 routes to static HTML at build time. Deploy to Cloudflare Pages
 - Each page component must export a `ssgOptions: SsgOptions` object (from `vite-plugin-ssg/utils`) with `slug`, `routeUrl`, `Head`, and `context`. The object **must** end with `};` (semicolon) — the plugin uses a regex to detect it.
 - Slugs must NOT contain `/` (e.g., use `'about'` not `'about/index'`) — the plugin has a bug where subdirectory slugs cause a temp file write failure.
 - Output: `dist/about.html`, `dist/products.html`, etc. (served at `/about`, `/products` on Cloudflare Pages). No `about/index.html` structure.
-- `public/_redirects` with `/* /index.html 200` provides SPA fallback. Cloudflare Pages serves static files before applying redirect rules.
+- ~~`public/_redirects` with `/* /index.html 200` provides SPA fallback.~~ Removed 2026-10-17: the catch-all served index.html with HTTP 200 for unknown URLs, which rendered React Router's default error screen. Every route is pre-rendered to its own `.html`, so no fallback is needed. `NotFoundPage` is pre-rendered to `dist/404.html`, which Cloudflare Pages serves with HTTP 404 for any unmatched path; App.tsx's `*` route renders the same page client-side.
 - React version: **19.2.4** (upgraded from 18 during F-001 to satisfy `vite-plugin-ssg`'s use of `prerenderToNodeStream`).
 
 **Nepali i18n tradeoff:** The static HTML will contain only English strings. Nepali content loads after JS hydration. This is intentional and acceptable: Nepali is a user preference feature, not a primary SEO target. The `html[lang]` attribute switches to `ne` after hydration.
@@ -914,10 +916,7 @@ pages_build_output_dir = "dist"
 **Cloudflare Pages environment variables (set in CF dashboard):**
 - `WEB3FORMS_KEY` — Web3Forms API key for form submission
 
-**`public/_redirects`:**
-```
-/* /index.html 200
-```
+**`public/_redirects`:** comment only — no `/* /index.html 200` catch-all (removed 2026-10-17), so Cloudflare Pages serves `dist/404.html` with HTTP 404 for unknown URLs.
 
 **`public/robots.txt`:**
 ```

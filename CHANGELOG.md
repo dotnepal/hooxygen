@@ -4,6 +4,18 @@ All notable changes to the HO Oxygen website are recorded here in reverse-chrono
 
 ---
 
+## 2026-10-17 — Docs: remove stale SPA-fallback references
+
+**Affected files:** `CLAUDE.md`, `runbooks/DEPLOY.md`, `docs/ARCHITECTURE-DECISION.md`, `tasks/1-FEATURES.md`
+
+**Changes:**
+- Replaced references to the `/* /index.html 200` SPA fallback with the 404.html behaviour
+- Added `NotFoundPage` to file listings and the `noindex` option to the `generatePageHead()` description
+- Added a post-deploy 404 status check to the deploy runbook
+- Corrected `dist/` output paths in `docs/ARCHITECTURE-DECISION.md` to the flat `<slug>.html` files the build actually produces (was `about/index.html` style)
+
+---
+
 ## 2026-10-17 — Add 404 page; serve unknown URLs with HTTP 404
 
 **Affected files:**

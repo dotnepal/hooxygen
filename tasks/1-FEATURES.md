@@ -263,7 +263,7 @@
 - [x] Touch targets min 44×44px (Button/Badge/LanguageToggle all have `min-h-[44px] min-w-[44px]`)
 
 ### F-014: Deployment Setup ✓ COMPLETE (2026-03-28)
-- [x] `public/_redirects`: `/* /index.html 200`
+- [x] `public/_redirects`: `/* /index.html 200` *(removed 2026-10-17 — replaced by `dist/404.html` served with HTTP 404)*
 - [x] `wrangler.toml` skeleton
 - [x] GitHub Actions: `.github/workflows/deploy.yml` — build on PRs, deploy to Cloudflare Pages on push to `main`
 - [x] `VITE_FORM_ENDPOINT=/api/contact` injected as build-time env var in the workflow

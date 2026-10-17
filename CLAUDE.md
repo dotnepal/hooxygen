@@ -23,7 +23,7 @@
 - `src/App.tsx` — root router with RootLayout (Navbar + Footer + Suspense)
 - `src/index.css` — Tailwind v4 @theme brand tokens + global styles
 - `src/routes.ts` — route definitions for react-router-dom v6
-- `src/pages/` — HomePage, AboutPage, ProductsPage, ContactPage, FAQPage, ServicesPage (all complete)
+- `src/pages/` — HomePage, AboutPage, ProductsPage, ContactPage, FAQPage, ServicesPage (all complete), NotFoundPage (404 → `dist/404.html`, noindex, also the router's `*` route)
 - `src/components/layout/` — Navbar.tsx (transparent hero mode + white-on-scroll), Footer.tsx
 - `src/components/ui/` — Button (white-outline variant added), Card, Badge, PageHero, SectionHeader, LanguageToggle, index.ts
 - `src/hooks/useScrolled.ts` — scroll detection hook
@@ -35,10 +35,10 @@
 - `scripts/inject-scripts.mjs` — post-build script: injects main JS bundle into HTML files
 - `scripts/generate-sitemap.mjs` — post-build script: generates dynamic `dist/sitemap.xml` with hreflang + today's date
 - `scripts/seo-report.mjs` — CI validation script: checks robots.txt, sitemap.xml, OG meta tags, image alt attributes
-- `src/utils/seoHelpers.tsx` — SEO utilities: `generatePageHead()` (OG tags, hreflang, canonical), `generateStructuredData()` (JSON-LD)
+- `src/utils/seoHelpers.tsx` — SEO utilities: `generatePageHead()` (OG tags, hreflang, canonical; `noindex` option for the 404 page), `generateStructuredData()` (JSON-LD)
 - `src/components/seo/StructuredData.tsx` — React component: renders Organization + LocalBusiness JSON-LD schema
 - `functions/api/contact.ts` — Cloudflare Pages Function for form submission
-- `public/_redirects` — SPA routing rule for Cloudflare Pages
+- `public/_redirects` — comment only; no SPA catch-all, so Cloudflare Pages serves `404.html` with HTTP 404 for unknown URLs
 - `wrangler.toml` — Cloudflare Pages config skeleton
 
 **Decisions:**

@@ -156,4 +156,9 @@ All 6 routes are pre-rendered via SSG and verified at deploy:
 | `/contact` | Contact |
 | `/faq` | FAQ |
 
-SPA fallback is handled by `public/_redirects` (`/* /index.html 200`), so client-side navigation between routes works without server-side route config.
+Every route is pre-rendered to its own `.html` file, so Cloudflare Pages serves them natively — there is no SPA fallback in `public/_redirects`. Unknown URLs get `dist/404.html` (from `src/pages/NotFoundPage.tsx`) with HTTP 404. Do not re-add a `/* /index.html 200` rule: it overrides `404.html` and makes every unknown URL return 200.
+
+Post-deploy check:
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://www.hooxygen.com.np/page-not-found.html   # expect 404
+```
