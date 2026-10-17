@@ -21,7 +21,7 @@ Developer → PR to main → GitHub Actions (build + deploy Worker + deploy Page
 
 | Job | Trigger | Steps |
 |-----|---------|-------|
-| `build` | All PRs + push to main | checkout → setup Node 20 → `npm ci` → `npm run build` → upload artifact |
+| `build` | All PRs + push to main | checkout → setup Node 22.16.0 → `npm ci` → `npm run build` → upload artifact |
 | `deploy` | Push to `main` only | download artifact → `wrangler deploy` for `workers/contact-mailer` → `wrangler pages deploy dist` |
 
 GitHub Actions is the **only** production deploy path.

@@ -893,7 +893,7 @@ GitHub repo (main branch)
 GitHub Actions (.github/workflows/deploy.yml)
       │
       ├── actions/checkout@v4
-      ├── actions/setup-node@v4 (Node 20)
+      ├── actions/setup-node@v4 (Node 22.16.0)
       ├── npm ci
       ├── npm run build   ──► produces dist/
       └── cloudflare/wrangler-action@v3
