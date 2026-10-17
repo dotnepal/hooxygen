@@ -156,3 +156,226 @@ html:not([data-lang="ne"]) #root,
 html[data-lang="ne"].lang-ready #root {
   visibility: visible;
 }
+
+/* ─── Gas products grid (Home) ─────────────────────────────────────────────
+   Blue-only palette; Sora for titles/symbols, DM Sans for body copy.
+   Hover lift uses the individual `translate` property so it is not overridden
+   by the fadeSlideUp animation, which holds a `transform` via fill-mode. */
+.gas-section {
+  background: #f3f7fd;
+  padding: 72px 64px;
+}
+
+.gas-container {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.gas-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.gas-card {
+  position: relative;
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e3ebf7;
+  border-radius: 20px;
+  box-shadow: 0 1px 2px rgba(18, 41, 77, 0.04), 0 12px 28px -16px rgba(18, 41, 77, 0.16);
+  transition: translate 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.gas-card:nth-child(n + 4) {
+  grid-column: span 3;
+}
+
+.gas-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1b3fa6, #4c8df6);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.gas-card:hover {
+  translate: 0 -4px;
+  border-color: #c5d8f6;
+  box-shadow: 0 2px 4px rgba(18, 41, 77, 0.04), 0 28px 48px -18px rgba(27, 63, 166, 0.3);
+}
+
+.gas-card:hover::before {
+  transform: scaleX(1);
+}
+
+.gas-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.gas-tile {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  color: #1b3fa6;
+  background: linear-gradient(145deg, #eef5ff, #dce9fd);
+  box-shadow: inset 0 0 0 1px rgba(27, 63, 166, 0.08);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.gas-card:hover .gas-tile {
+  color: #fff;
+  background: linear-gradient(145deg, #2c57cc, #1b3fa6);
+}
+
+.gas-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.gas-ring sub {
+  position: relative;
+  top: 3px;
+  font-size: 8px;
+  line-height: 0;
+  vertical-align: baseline;
+}
+
+.gas-title {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #12294d;
+}
+
+.gas-body {
+  flex: 1;
+  margin-top: 18px;
+}
+
+.gas-desc {
+  margin: 0;
+  max-width: 34ch;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: #5a6b85;
+}
+
+.gas-card:nth-child(n + 4) .gas-desc {
+  max-width: 46ch;
+}
+
+.gas-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid #e8eff9;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  color: #1b3fa6;
+  text-decoration: none;
+}
+
+.gas-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 15px;
+  line-height: 1;
+  color: #1b3fa6;
+  background: #eaf2fe;
+  transition: background 0.25s ease, color 0.25s ease, translate 0.25s ease;
+}
+
+.gas-card:hover .gas-arrow {
+  color: #fff;
+  background: #1b3fa6;
+  translate: 3px 0;
+}
+
+.gas-link:focus-visible {
+  outline: 2px solid #4c8df6;
+  outline-offset: 6px;
+  border-radius: 6px;
+}
+
+@media (max-width: 980px) {
+  .gas-section {
+    padding: 48px 24px;
+  }
+
+  .gas-card,
+  .gas-card:nth-child(n + 4) {
+    grid-column: span 3;
+  }
+
+  .gas-card:nth-child(5) {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 640px) {
+  .gas-section {
+    padding: 40px 16px;
+  }
+
+  .gas-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .gas-card,
+  .gas-card:nth-child(n + 4),
+  .gas-card:nth-child(5) {
+    grid-column: auto;
+    padding: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gas-card,
+  .gas-card::before,
+  .gas-tile,
+  .gas-arrow {
+    transition: none;
+  }
+
+  .gas-card:hover,
+  .gas-card:hover .gas-arrow {
+    translate: none;
+  }
+}
