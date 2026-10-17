@@ -16,7 +16,7 @@
 6. [ADR-003: i18n — Bundled Translations over HTTP Backend](#adr-003-i18n--bundled-translations-over-http-backend)
 7. [ADR-004: Animation — Selective Motion + CSS Keyframes](#adr-004-animation--selective-motion--css-keyframes)
 8. [ADR-005: Form Submission — Cloudflare Pages Function with Contact Mailer Worker](#adr-005-form-submission--cloudflare-pages-function-with-contact-mailer-worker)
-9. [ADR-006: Component Architecture — Flat + Section-Scoped](#adr-006-component-architecture--flat--section-scoped)
+9. [ADR-006: Component Architecture — Layered, Page-Scoped](#adr-006-component-architecture--layered-page-scoped)
 10. [ADR-007: Routing — Centralized Route Manifest](#adr-007-routing--centralized-route-manifest)
 11. [Data Layer Design](#11-data-layer-design)
 12. [Styling System Design](#12-styling-system-design)
@@ -121,135 +121,26 @@ This is a **static informational website** for HO Oxygen in Nepal. As of 2026-04
 
 ## 3. Directory Structure
 
-```
-ho-gas-factory/
-│
-├── .github/
-│   └── workflows/
-│       └── deploy.yml                  # GitHub Actions: build + deploy to Cloudflare Pages
-│
-├── docs/
-│   ├── 1-INITIAL-SPECIFICATION.md      # Original specification (do not modify)
-│   └── SKILLS.md                       # Frontend aesthetic guidelines
-│
-├── functions/                          # Cloudflare Pages Functions (Workers runtime, NOT src/)
-│   └── api/
-│       └── contact.ts                  # POST /api/contact — form submission handler
-│
-├── public/                             # Copied verbatim into dist/ at build time
-│   ├── _redirects                      # Comment only — no SPA catch-all, so CF Pages serves 404.html with HTTP 404
-│   ├── robots.txt                      # Search engine directives with AI bot allow-list
-│   └── sitemap.xml                     # Reference sitemap (overwritten at build time)
-│
-├── src/
-│   ├── main.tsx                        # React entry point — bootstraps i18n then renders App
-│   ├── App.tsx                         # Root component: RouterProvider + lang attribute effect
-│   ├── routes.ts                       # Single source of truth for all routes (consumed by router AND SSG)
-│   ├── index.css                       # Tailwind v4 @import + @theme tokens + global base styles
-│   └── vite-env.d.ts                   # Vite env type declarations
-│   │
-│   ├── pages/                          # Route-level page components (one per route)
-│   │   ├── HomePage.tsx
-│   │   ├── AboutPage.tsx
-│   │   ├── ProductsPage.tsx
-│   │   ├── ServicesPage.tsx
-│   │   ├── ContactPage.tsx
-│   │   ├── FAQPage.tsx
-│   │   └── NotFoundPage.tsx            # 404 page — SSG slug '404' → dist/404.html; also the router's '*' route
-│   │
-│   ├── components/
-│   │   ├── ui/                         # Design system primitives (no business logic)
-│   │   │   ├── index.ts                # Barrel re-export
-│   │   │   ├── Button.tsx
-│   │   │   ├── Card.tsx
-│   │   │   ├── Badge.tsx
-│   │   │   ├── SectionHeader.tsx
-│   │   │   ├── PageHero.tsx
-│   │   │   ├── Toast.tsx
-│   │   │   └── AnimateOnScroll.tsx
-│   │   │
-│   │   ├── layout/                     # App shell components
-│   │   │   ├── PageLayout.tsx          # Wraps Navbar + <Outlet> + Footer
-│   │   │   ├── Navbar.tsx
-│   │   │   ├── MobileDrawer.tsx
-│   │   │   └── Footer.tsx
-│   │   │
-│   │   ├── SEOHead.tsx                 # Per-page <title> + <meta> tags
-│   │   │
-│   │   └── sections/                  # Page-specific composite sections
-│   │       ├── home/
-│   │       │   ├── HeroSection.tsx
-│   │       │   ├── GasHighlights.tsx
-│   │       │   ├── ServicesStrip.tsx
-│   │       │   ├── TrustGallery.tsx
-│   │       │   └── CTABanner.tsx
-│   │       ├── about/
-│   │       │   ├── StorySection.tsx
-│   │       │   ├── TeamSection.tsx
-│   │       │   ├── ServiceAreaSection.tsx
-│   │       │   └── WhyChooseUsSection.tsx
-│   │       ├── products/
-│   │       │   ├── GasTabs.tsx
-│   │       │   ├── CylinderTable.tsx
-│   │       │   └── ServicesSection.tsx
-│   │       ├── contact/
-│   │       │   ├── ContactForm.tsx
-│   │       │   ├── ContactInfo.tsx
-│   │       │   └── MapEmbed.tsx
-│   │       └── faq/
-│   │           ├── CategoryFilter.tsx
-│   │           ├── Accordion.tsx
-│   │           └── AccordionItem.tsx
-│   │
-│   ├── data/                           # Typed static data — no API calls
-│   │   ├── products.ts                 # Gas types, cylinder specs
-│   │   ├── faq.ts                      # FAQ items with categories
-│   │   └── team.ts                     # Team member records
-│   │
-│   ├── hooks/                          # Custom React hooks
-│   │   ├── useScrollPosition.ts        # Debounced scroll Y position
-│   │   ├── useLanguageToggle.ts        # i18n language switcher
-│   │   └── useIntersectionObserver.ts  # Scroll-triggered visibility
-│   │
-│   ├── i18n/
-│   │   ├── config.ts                   # i18next initialization
-│   │   └── locales/
-│   │       ├── en.json                 # All English strings
-│   │       └── np.json                 # All Nepali strings
-│   │
-│   └── lib/
-│       └── .gitkeep                   # lib/ is empty; ContactPage POSTs to /api/contact directly
-│
-├── tasks/
-│   ├── 1-FEATURES.md                   # Feature breakdown with ASCII wireframes
-│   ├── ARCHITECTURE-DECISION.md        # This file
-│   ├── todo.md                         # Per-session task checklist (created during implementation)
-│   └── lessons.md                      # Self-improvement log (created after corrections)
-│
-├── CLAUDE.md                           # Project specification and AI workflow rules
-├── index.html                          # Vite HTML template (Google Fonts <link> here)
-├── package.json
-├── tsconfig.json
-├── tsconfig.node.json
-├── vite.config.ts
-├── wrangler.toml                       # Cloudflare Pages project config
-│
-├── scripts/                            # Post-build automation
-│   ├── generate-sitemap.mjs            # Generates dist/sitemap.xml with hreflang + today's date
-│   ├── inject-scripts.mjs              # Injects hashed main JS bundle into HTML files
-│   └── seo-report.mjs                  # CI validation: checks robots.txt, sitemap, OG tags, image alts
-│
-└── .github/
-    └── workflows/
-        └── deploy.yml                  # GitHub Actions: build + SEO check + deploy to Cloudflare Pages
-```
+The source tree is the source of truth — browse `src/` rather than relying on a hand-maintained listing here (an earlier detailed tree drifted from the code and was removed). Top level:
 
-**Build Pipeline (in order):**
-1. `tsc -b` — TypeScript build
-2. `vite build` — Vite pre-renders all 6 pages to static HTML
-3. `scripts/inject-scripts.mjs` — Injects hashed main bundle into all HTML files
-4. `scripts/generate-sitemap.mjs` — Generates `dist/sitemap.xml` from route config with today's date
-5. `npm run seo:report` — CI validation (run in GitHub Actions before deploy)
+| Path | Purpose |
+|------|---------|
+| `src/pages/` | One file per route; each exports `ssgOptions` for SSG |
+| `src/components/ui/` | Design-system primitives (Button, Card, Badge, PageHero, …) with a barrel `index.ts` |
+| `src/components/layout/` | App shell: Navbar, Footer, SkipToContentLink |
+| `src/components/seo/` | JSON-LD structured data |
+| `src/data/` | Typed static data (products, FAQ) |
+| `src/hooks/` | `useScrolled`, `useScrollAnimation` |
+| `src/i18n/` | `en.json`, `np.json`, `index.ts`, `ssgContext.tsx` (SSG layout wrapper) |
+| `src/utils/` | `seoHelpers.tsx` (page head + structured data) |
+| `src/routes.ts` | Single route manifest (see ADR-007) |
+| `functions/api/contact.ts` | Cloudflare Pages Function for the contact form |
+| `workers/contact-mailer/` | Mailer Worker (service-bound from the Function) |
+| `scripts/` | Post-build: `inject-scripts.mjs`, `generate-sitemap.mjs`, `seo-report.mjs` |
+| `public/` | Copied verbatim into `dist/` (robots.txt, `_redirects`, favicon, OG image) |
+| `.github/workflows/deploy.yml` | GitHub Actions CI/CD |
+
+`src/components/sections/` and `src/lib/` exist as empty placeholders (`.gitkeep`).
 
 ---
 
@@ -382,7 +273,7 @@ Both `en.json` and `np.json` are imported directly in `src/i18n/config.ts` and p
 **Status:** Decided
 
 **Context:**
-Two animation libraries were considered: Motion (formerly Framer Motion) and pure CSS. SKILLS.md demands "high-impact page load with staggered reveals" and "scroll-triggering and hover states."
+Two animation libraries were considered: Motion (formerly Framer Motion) and pure CSS. `docs/FRONTEND-GUIDELINES.md` demands "high-impact page load with staggered reveals" and "scroll-triggering and hover states."
 
 **Decision: Hybrid approach**
 
@@ -466,48 +357,32 @@ Browser → POST /api/contact (JSON + Turnstile token)
 
 ---
 
-## ADR-006: Component Architecture — Flat + Section-Scoped
+## ADR-006: Component Architecture — Layered, Page-Scoped
 
-**Status:** Decided
+**Status:** Decided (revised: the originally planned `sections/` layer was not adopted; page sections live inside each page file)
 
 **Context:**
-React component organization patterns range from feature-based (one folder per feature), domain-based (one folder per domain entity), to layer-based (ui/layout/sections/pages).
+React component organization patterns range from feature-based (one folder per feature), domain-based (one folder per domain entity), to layer-based (ui/layout/pages).
 
-**Decision: Layer-based with section scoping**
-
-Three clear layers with no cross-layer imports in the wrong direction:
+**Decision: Layer-based, with page-specific sections defined inside their page file**
 
 ```
-pages/          → compose sections + layout
-sections/       → compose ui primitives + consume data
+pages/          → compose ui primitives + layout; page-specific sections are local components
 ui/             → pure presentational, zero business logic
-layout/         → app shell (Navbar, Footer, PageLayout)
+layout/         → app shell (Navbar, Footer)
+seo/            → structured data
 data/           → typed static data, no React
 hooks/          → reusable stateful logic, no JSX
-lib/            → pure utility functions, no React
+utils/          → pure helpers (SEO head generation)
 ```
 
 **Rules:**
 - `ui/` components accept only primitive props (strings, booleans, callbacks). They do not import from `data/`, `i18n/`, or `hooks/`.
-- `sections/` components import from `ui/` and `data/`. They use `useTranslation()` for i18n. They do not import from `pages/`.
-- `pages/` components import `sections/` and apply `SEOHead`. They do not contain layout logic.
-- No index barrel re-exports inside `sections/` or `pages/` — direct imports only to keep bundle analysis clear.
-- `ui/index.ts` is the only barrel file (for design system ergonomics).
+- `pages/` components use `useTranslation()` and import from `ui/` and `data/`; each applies its head via `generatePageHead()`.
+- No index barrel re-exports inside `pages/`; `ui/index.ts` is the only barrel file (for design system ergonomics).
+- Extract a section into its own component file only once it is reused by a second page.
 
-**Props pattern for UI components:**
-```tsx
-// Button — union type variant, not separate boolean flags
-type ButtonVariant = 'primary' | 'secondary' | 'ghost';
-type ButtonSize = 'sm' | 'md' | 'lg';
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  as?: 'button' | 'a';
-  to?: string;       // if as="Link" via react-router-dom
-  loading?: boolean;
-}
-```
+**Props pattern for UI components:** union-type variants rather than boolean flags (see `src/components/ui/Button.tsx`).
 
 ---
 
@@ -521,19 +396,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 **Decision: Single `src/routes.ts` manifest consumed by both**
 
 ```ts
-// src/routes.ts
+// src/routes.ts (abridged — see the file for the full list)
 export const ROUTES = [
-  { path: '/',          label: 'nav.home',     component: lazy(() => import('./pages/HomePage')) },
-  { path: '/about',     label: 'nav.about',    component: lazy(() => import('./pages/AboutPage')) },
-  { path: '/products',  label: 'nav.products', component: lazy(() => import('./pages/ProductsPage')) },
-  { path: '/contact',   label: 'nav.contact',  component: lazy(() => import('./pages/ContactPage')) },
-  { path: '/faq',       label: 'nav.faq',      component: lazy(() => import('./pages/FAQPage')) },
+  { path: '/',         labelKey: 'nav.home',     component: lazy(() => import('./pages/HomePage')) },
+  { path: '/services', labelKey: 'nav.services', component: lazy(() => import('./pages/ServicesPage')) },
+  // /products, /about, /contact, /faq …
 ] as const;
 
-// Consumed by vite.config.ts SSG includedRoutes:
-export const ROUTE_PATHS = ROUTES.map(r => r.path);
-// → ['/', '/about', '/products', '/contact', '/faq']
+export const ROUTE_PATHS = ROUTES.map((r) => r.path);
 ```
+
+The 404 page is intentionally **not** in `ROUTES`: it is pre-rendered by SSG (`slug: '404'`) and matched by a catch-all `*` route in `App.tsx`, so it stays out of the Navbar and sitemap.
 
 The `label` field is an i18n key, allowing the Navbar to render translated link labels by iterating `ROUTES` — no hardcoded nav link list.
 
@@ -604,22 +477,6 @@ export const FAQ_ITEMS: FAQItem[] = [
 ];
 ```
 
-### `src/data/team.ts`
-
-```ts
-export interface TeamMember {
-  id: string;
-  nameKey: string;
-  roleKey: string;
-  image: string;  // placeholder URL e.g. "https://placehold.co/300x300"
-}
-
-export const TEAM_MEMBERS: TeamMember[] = [
-  { id: 'tm-1', nameKey: 'about.team.member1.name', roleKey: 'about.team.member1.role', image: 'https://placehold.co/300x300/1E40AF/EFF6FF?text=Team' },
-  // 3-4 members
-];
-```
-
 ---
 
 ## 12. Styling System Design
@@ -642,7 +499,7 @@ Level 4: Component-level inline variants (via cva or plain template literals)
 
 ### Visual Design Language
 
-Per `docs/SKILLS.md`:
+Per `docs/FRONTEND-GUIDELINES.md`:
 
 | Element | Design choice | Implementation |
 |---------|---------------|----------------|
@@ -996,126 +853,7 @@ WCAG 2.1 AA compliance. Target score: Lighthouse Accessibility ≥ 95.
 
 ## 19. Complete File Manifest
 
-55 files total across all 14 feature tasks. Listed in creation order.
-
-**F-001 (Scaffolding) — 13 files:**
-```
-package.json
-tsconfig.json
-tsconfig.node.json
-vite.config.ts
-index.html
-src/main.tsx
-src/App.tsx
-src/routes.ts
-src/index.css
-src/vite-env.d.ts
-public/_redirects
-wrangler.toml
-.gitignore
-```
-
-**F-002 (i18n) — 4 files:**
-```
-src/i18n/config.ts
-src/i18n/locales/en.json
-src/i18n/locales/np.json
-src/hooks/useLanguageToggle.ts
-```
-
-**F-003 (Design System) — 8 files:**
-```
-src/components/ui/Button.tsx
-src/components/ui/Card.tsx
-src/components/ui/Badge.tsx
-src/components/ui/SectionHeader.tsx
-src/components/ui/PageHero.tsx
-src/components/ui/Toast.tsx
-src/components/ui/AnimateOnScroll.tsx
-src/components/ui/index.ts
-```
-
-**F-004 (Navbar) — 3 files:**
-```
-src/components/layout/Navbar.tsx
-src/components/layout/MobileDrawer.tsx
-src/hooks/useScrollPosition.ts
-```
-
-**F-005 (Footer) — 2 files:**
-```
-src/components/layout/Footer.tsx
-src/components/layout/PageLayout.tsx
-```
-
-**F-006 (Home) — 6 files:**
-```
-src/pages/HomePage.tsx
-src/components/sections/home/HeroSection.tsx
-src/components/sections/home/GasHighlights.tsx
-src/components/sections/home/ServicesStrip.tsx
-src/components/sections/home/TrustGallery.tsx
-src/components/sections/home/CTABanner.tsx
-```
-
-**F-007 (About) — 6 files:**
-```
-src/pages/AboutPage.tsx
-src/components/sections/about/StorySection.tsx
-src/components/sections/about/TeamSection.tsx
-src/components/sections/about/ServiceAreaSection.tsx
-src/components/sections/about/WhyChooseUsSection.tsx
-src/data/team.ts
-```
-
-**F-008 (Products) — 5 files:**
-```
-src/pages/ProductsPage.tsx
-src/components/sections/products/GasTabs.tsx
-src/components/sections/products/CylinderTable.tsx
-src/components/sections/products/ServicesSection.tsx
-src/data/products.ts
-```
-
-**F-009 (Contact) — 6 files:**
-```
-src/pages/ContactPage.tsx
-src/components/sections/contact/ContactForm.tsx
-src/components/sections/contact/ContactInfo.tsx
-src/components/sections/contact/MapEmbed.tsx
-src/lib/submitForm.ts
-functions/api/contact.ts
-```
-
-**F-010 (FAQ) — 5 files:**
-```
-src/pages/FAQPage.tsx
-src/components/sections/faq/CategoryFilter.tsx
-src/components/sections/faq/Accordion.tsx
-src/components/sections/faq/AccordionItem.tsx
-src/data/faq.ts
-```
-
-**F-011 (A11y/SEO) — 3 files:**
-```
-src/components/SEOHead.tsx
-public/robots.txt
-public/sitemap.xml
-```
-
-**F-012 (Animations) — 1 file:**
-```
-src/hooks/useIntersectionObserver.ts
-```
-*(AnimateOnScroll.tsx already created in F-003)*
-
-**F-013 (Responsive) — 0 new files**
-*(All responsive work is modification of existing components)*
-
-**F-014 (Deployment) — 1 file:**
-```
-.github/workflows/deploy.yml
-```
+Removed: the per-feature (F-001 … F-014) file lists went stale as the code evolved. Use `git ls-files` for the current file set and `CHANGELOG.md` / `tasks/1-FEATURES.md` for feature history. See §3 for the top-level layout.
 
 ---
 

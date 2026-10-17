@@ -67,12 +67,12 @@
 │ GAS TABS: [Oxygen] [Nitrogen] [Hydrogen]                   │
 │ Active tab shows:                                          │
 │  - Description + use cases paragraph                       │
-│  ┌──────┬──────────┬────────┬──────┬──────┬──────────┐    │
-│  │ SIZE │ CAPACITY │ WEIGHT │ RENT │ SALE │ PRICING  │    │
-│  │ S    │ 1.5 L    │ 3 kg   │  ✓   │  ✓   │ Contact  │    │
-│  │ M    │ 5 L      │ 8 kg   │  ✓   │  ✓   │ Contact  │    │
-│  │ L    │ 10 L     │ 15 kg  │  ✓   │  ✓   │ Contact  │    │
-│  └──────┴──────────┴────────┴──────┴──────┴──────────┘    │
+│  ┌──────┬──────────┬──────┬──────┬──────────┐             │
+│  │ SIZE │ CAPACITY │ RENT │ SALE │ PRICING  │             │
+│  │ S    │ 1.5 L    │  ✓   │  ✓   │ Contact  │             │
+│  │ M    │ 5 L      │  ✓   │  ✓   │ Contact  │             │
+│  │ L    │ 10 L     │  ✓   │  ✓   │ Contact  │             │
+│  └──────┴──────────┴──────┴──────┴──────────┘             │
 ├───────────────────────────────────────────────────────────┤
 │ SERVICES — 3-col cards                                     │
 │  Refilling | Bulk Orders | Delivery (same-day / regional)  │
@@ -186,12 +186,12 @@
 - [x] Team cards grid (photo, name, role) — 3–4 placeholder members
 - [x] Service area badges (Local / Regional / National)
 - [x] "Why Choose Us" 4-col icon grid
-> Notes: Reuses `PageHero` component. CompanyStory hides facility image on mobile (`hidden lg:block`). TEAM_MEMBERS is a static module-level constant (not i18n — proper nouns). ServiceAreas reuses Badge `variant="primary"` with emoji. WHY_US_ICONS constant follows GAS_ICONS pattern. Background alternation: gradient → white → brand-light → white → brand-light.
+> Notes: Reuses `PageHero` component. CompanyStory hides facility image on mobile (`hidden lg:block`). *(Team section later removed from the About page.)* ServiceAreas reuses Badge `variant="primary"` with emoji. WHY_US_ICONS constant follows GAS_ICONS pattern. Background alternation: gradient → white → brand-light → white → brand-light.
 
 ### F-008: Products/Services Page ✓ COMPLETE (2026-03-27)
 - [x] Tab bar (Oxygen | Nitrogen | Hydrogen) with animated underline
 - [x] Per-tab: description + use cases list
-- [x] Cylinder table from `src/data/products.ts`: Size, Capacity, Weight, Rent ✓/✗, Sale ✓/✗, Pricing
+- [x] Cylinder table from `src/data/products.ts`: Size, Capacity, Rent ✓/✗, Sale ✓/✗, Pricing *(Weight column removed 2026-03-29; not in CLAUDE.md §2.3)*
 - [x] `src/data/products.ts` typed data for all 3 gas types
 - [x] Services section: 3 cards (Refilling, Bulk Orders, Delivery)
 > Notes: Tab bar uses `role="tablist/tab/tabpanel"` ARIA pattern with `useState<GasKey>`. Table wrapped in `overflow-x-auto` for mobile. Pricing cells use `Button as="a" href="/contact" variant="outline" size="sm"`. Use cases in static data constant (English-only, not i18n). Added `products.{oxygen|nitrogen|hydrogen}.desc` keys to both locale files.
@@ -268,7 +268,7 @@
 - [x] GitHub Actions: `.github/workflows/deploy.yml` — build on PRs, deploy to Cloudflare Pages on push to `main`
 - [x] `VITE_FORM_ENDPOINT=/api/contact` injected as build-time env var in the workflow
 - [x] Verify clean `dist/` build output (`npm run build` passes, SSG generates all pages)
-> Notes: Two GitHub secrets required (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). `WEB3FORMS_KEY` is a runtime secret set in CF Pages dashboard (never in GH secrets). Full deployment runbook in `runbooks/DEPLOY.md`. Build job runs on all PRs as CI check; deploy job runs only on push to `main`.
+> Notes: Two GitHub secrets required (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). `TURNSTILE_SECRET_KEY` is a runtime secret set in the CF Pages dashboard (never in GH secrets), and the `CONTACT_MAILER` service binding points to the `contact-mailer` Worker. Full deployment runbook in `runbooks/DEPLOY.md`. Build job runs on all PRs as CI check; deploy job runs only on push to `main`.
 
 ---
 

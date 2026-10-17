@@ -82,6 +82,8 @@ Worker config lives in `workers/contact-mailer/wrangler.toml`:
 
 The Worker also requires the `send_email` binding declared in that same file.
 
+**Verify the binding after deploy:** CF Dashboard → Workers & Pages → `ho-gas-factory` → Settings → Bindings → `CONTACT_MAILER` should point to service `contact-mailer`.
+
 ## Environment Variables
 
 ### Build-time (GitHub Actions)
