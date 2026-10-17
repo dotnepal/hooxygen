@@ -106,48 +106,14 @@ function HomeHero() {
 
 // ─── Gas Highlights ────────────────────────────────────────────────────────
 
-const GAS_ICONS = {
-  oxygen: (
-    <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
-      <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">
-        O₂
-      </text>
-    </svg>
-  ),
-  nitrogen: (
-    <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
-      <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">
-        N₂
-      </text>
-    </svg>
-  ),
-  hydrogen: (
-    <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
-      <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">
-        H₂
-      </text>
-    </svg>
-  ),
-  carbondioxide: (
-    <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
-      <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="13" fill="currentColor" fontWeight="700">
-        CO₂
-      </text>
-    </svg>
-  ),
-  argon: (
-    <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10" aria-hidden="true">
-      <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="2" />
-      <text x="20" y="26" textAnchor="middle" fontSize="16" fill="currentColor" fontWeight="700">
-        Ar
-      </text>
-    </svg>
-  ),
-}
+// Chemical symbols for the icon tile: [symbol, optional subscript]
+const GAS_SYMBOLS = {
+  oxygen: ['O', '2'],
+  nitrogen: ['N', '2'],
+  hydrogen: ['H', '2'],
+  carbondioxide: ['CO', '2'],
+  argon: ['Ar', ''],
+} as const
 
 function GasHighlights() {
   const { t } = useTranslation()
@@ -156,38 +122,42 @@ function GasHighlights() {
   const gridRef = useScrollAnimation<HTMLDivElement>({ stagger: 120 })
 
   return (
-    <section aria-labelledby="gases-heading" className="py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div ref={headerRef} className="animate-on-scroll mb-12">
+    <section aria-labelledby="gases-heading" className="gas-section">
+      <div className="gas-container">
+        <div ref={headerRef} className="animate-on-scroll mb-8 md:mb-12">
           <SectionHeader
             eyebrow={t('common.learnMore')}
             title={t('home.gas.sectionTitle')}
             align="center"
           />
         </div>
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {gases.map((gas) => (
-            <Card
-              key={gas}
-              hover
-              as="article"
-              className="animate-on-scroll flex flex-col items-start gap-4"
-            >
-              <div className="p-3 rounded-xl bg-brand-light text-brand-blue">{GAS_ICONS[gas]}</div>
-              <div>
-                <h3 className="text-xl font-display font-bold text-brand-dark">
-                  {t(`home.gas.${gas}.title`)}
-                </h3>
-                <p className="mt-2 font-body text-brand-steel leading-relaxed">
-                  {t(`home.gas.${gas}.desc`)}
-                </p>
-              </div>
-              <Button as="a" href="/products" variant="ghost" className="mt-auto -ml-2">
-                {t('home.gas.learnMore')} →
-              </Button>
-            </Card>
-          ))}
-        </div>
+        <section aria-label="Gas products">
+          <div ref={gridRef} className="gas-grid">
+            {gases.map((gas) => {
+              const [symbol, sub] = GAS_SYMBOLS[gas]
+              return (
+                <article key={gas} className="gas-card animate-on-scroll">
+                  <div className="gas-head">
+                    <span className="gas-tile" aria-hidden="true">
+                      <span className="gas-ring">
+                        {symbol}
+                        {sub && <sub>{sub}</sub>}
+                      </span>
+                    </span>
+                    <h3 className="gas-title">{t(`home.gas.${gas}.title`)}</h3>
+                  </div>
+                  <div className="gas-body">
+                    <p className="gas-desc">{t(`home.gas.${gas}.desc`)}</p>
+                  </div>
+                  <a href="/products" className="gas-link">
+                    <span>{t('home.gas.learnMore')}</span>
+                    <span className="gas-arrow" aria-hidden="true">→</span>
+                  </a>
+                </article>
+              )
+            })}
+          </div>
+        </section>
       </div>
     </section>
   )
