@@ -21,7 +21,7 @@ Developer → PR to main → GitHub Actions (build + deploy Worker + deploy Page
 
 | Job | Trigger | Steps |
 |-----|---------|-------|
-| `build` | All PRs + push to main | checkout → setup Node 20 → `npm ci` → `npm run build` → upload artifact |
+| `build` | All PRs + push to main | checkout → setup Node 22.16.0 → `npm ci` → `npm run build` → upload artifact |
 | `deploy` | Push to `main` only | download artifact → `wrangler deploy` for `workers/contact-mailer` → `wrangler pages deploy dist` |
 
 GitHub Actions is the **only** production deploy path.
@@ -81,6 +81,8 @@ Worker config lives in `workers/contact-mailer/wrangler.toml`:
 | `CONTACT_RECIPIENT_EMAIL` | Destination inbox for contact form submissions |
 
 The Worker also requires the `send_email` binding declared in that same file.
+
+**Verify the binding after deploy:** CF Dashboard → Workers & Pages → `ho-gas-factory` → Settings → Bindings → `CONTACT_MAILER` should point to service `contact-mailer`.
 
 ## Environment Variables
 

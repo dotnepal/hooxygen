@@ -15,8 +15,8 @@
 5. [ADR-002: Tailwind CSS v4 over v3](#adr-002-tailwind-css-v4-over-v3)
 6. [ADR-003: i18n — Bundled Translations over HTTP Backend](#adr-003-i18n--bundled-translations-over-http-backend)
 7. [ADR-004: Animation — Selective Motion + CSS Keyframes](#adr-004-animation--selective-motion--css-keyframes)
-8. [ADR-005: Form Submission — Cloudflare Pages Function with Web3Forms Fallback](#adr-005-form-submission--cloudflare-pages-function-with-web3forms-fallback)
-9. [ADR-006: Component Architecture — Flat + Section-Scoped](#adr-006-component-architecture--flat--section-scoped)
+8. [ADR-005: Form Submission — Cloudflare Pages Function with Contact Mailer Worker](#adr-005-form-submission--cloudflare-pages-function-with-contact-mailer-worker)
+9. [ADR-006: Component Architecture — Layered, Page-Scoped](#adr-006-component-architecture--layered-page-scoped)
 10. [ADR-007: Routing — Centralized Route Manifest](#adr-007-routing--centralized-route-manifest)
 11. [Data Layer Design](#11-data-layer-design)
 12. [Styling System Design](#12-styling-system-design)
@@ -98,7 +98,8 @@ This is a **static informational website** for HO Oxygen in Nepal. As of 2026-04
 │                                                                   │
 │  Static assets → served from CDN (global edge)                   │
 │  POST /api/contact → Cloudflare Pages Function (Workers runtime) │
-│                      → forwards to Web3Forms API → email inbox   │
+│                      → Turnstile check → CONTACT_MAILER Worker  │
+│                      → send_email → email inbox                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -112,143 +113,34 @@ This is a **static informational website** for HO Oxygen in Nepal. As of 2026-04
 **Request flow for form submission:**
 1. User fills contact form → clicks Submit
 2. `react-hook-form` validates client-side → shows inline errors if invalid
-3. On valid submission: POST to `VITE_FORM_ENDPOINT` (Cloudflare Pages Function at `/api/contact`)
-4. If env var not set (local dev): fallback POST directly to Web3Forms API
-5. Success/error toast rendered in-place
+3. On valid submission (with a Turnstile token): POST to `/api/contact` (Cloudflare Pages Function)
+4. The Function verifies Turnstile, validates, and hands off to the `contact-mailer` Worker, which sends the email
+5. Success/error status rendered in-place
 
 ---
 
 ## 3. Directory Structure
 
-```
-ho-gas-factory/
-│
-├── .github/
-│   └── workflows/
-│       └── deploy.yml                  # GitHub Actions: build + deploy to Cloudflare Pages
-│
-├── docs/
-│   ├── 1-INITIAL-SPECIFICATION.md      # Original specification (do not modify)
-│   └── SKILLS.md                       # Frontend aesthetic guidelines
-│
-├── functions/                          # Cloudflare Pages Functions (Workers runtime, NOT src/)
-│   └── api/
-│       └── contact.ts                  # POST /api/contact — form submission handler
-│
-├── public/                             # Copied verbatim into dist/ at build time
-│   ├── _redirects                      # Comment only — no SPA catch-all, so CF Pages serves 404.html with HTTP 404
-│   ├── robots.txt                      # Search engine directives with AI bot allow-list
-│   └── sitemap.xml                     # Reference sitemap (overwritten at build time)
-│
-├── src/
-│   ├── main.tsx                        # React entry point — bootstraps i18n then renders App
-│   ├── App.tsx                         # Root component: RouterProvider + lang attribute effect
-│   ├── routes.ts                       # Single source of truth for all routes (consumed by router AND SSG)
-│   ├── index.css                       # Tailwind v4 @import + @theme tokens + global base styles
-│   └── vite-env.d.ts                   # Vite env type declarations
-│   │
-│   ├── pages/                          # Route-level page components (one per route)
-│   │   ├── HomePage.tsx
-│   │   ├── AboutPage.tsx
-│   │   ├── ProductsPage.tsx
-│   │   ├── ServicesPage.tsx
-│   │   ├── ContactPage.tsx
-│   │   ├── FAQPage.tsx
-│   │   └── NotFoundPage.tsx            # 404 page — SSG slug '404' → dist/404.html; also the router's '*' route
-│   │
-│   ├── components/
-│   │   ├── ui/                         # Design system primitives (no business logic)
-│   │   │   ├── index.ts                # Barrel re-export
-│   │   │   ├── Button.tsx
-│   │   │   ├── Card.tsx
-│   │   │   ├── Badge.tsx
-│   │   │   ├── SectionHeader.tsx
-│   │   │   ├── PageHero.tsx
-│   │   │   ├── Toast.tsx
-│   │   │   └── AnimateOnScroll.tsx
-│   │   │
-│   │   ├── layout/                     # App shell components
-│   │   │   ├── PageLayout.tsx          # Wraps Navbar + <Outlet> + Footer
-│   │   │   ├── Navbar.tsx
-│   │   │   ├── MobileDrawer.tsx
-│   │   │   └── Footer.tsx
-│   │   │
-│   │   ├── SEOHead.tsx                 # Per-page <title> + <meta> tags
-│   │   │
-│   │   └── sections/                  # Page-specific composite sections
-│   │       ├── home/
-│   │       │   ├── HeroSection.tsx
-│   │       │   ├── GasHighlights.tsx
-│   │       │   ├── ServicesStrip.tsx
-│   │       │   ├── TrustGallery.tsx
-│   │       │   └── CTABanner.tsx
-│   │       ├── about/
-│   │       │   ├── StorySection.tsx
-│   │       │   ├── TeamSection.tsx
-│   │       │   ├── ServiceAreaSection.tsx
-│   │       │   └── WhyChooseUsSection.tsx
-│   │       ├── products/
-│   │       │   ├── GasTabs.tsx
-│   │       │   ├── CylinderTable.tsx
-│   │       │   └── ServicesSection.tsx
-│   │       ├── contact/
-│   │       │   ├── ContactForm.tsx
-│   │       │   ├── ContactInfo.tsx
-│   │       │   └── MapEmbed.tsx
-│   │       └── faq/
-│   │           ├── CategoryFilter.tsx
-│   │           ├── Accordion.tsx
-│   │           └── AccordionItem.tsx
-│   │
-│   ├── data/                           # Typed static data — no API calls
-│   │   ├── products.ts                 # Gas types, cylinder specs
-│   │   ├── faq.ts                      # FAQ items with categories
-│   │   └── team.ts                     # Team member records
-│   │
-│   ├── hooks/                          # Custom React hooks
-│   │   ├── useScrollPosition.ts        # Debounced scroll Y position
-│   │   ├── useLanguageToggle.ts        # i18n language switcher
-│   │   └── useIntersectionObserver.ts  # Scroll-triggered visibility
-│   │
-│   ├── i18n/
-│   │   ├── config.ts                   # i18next initialization
-│   │   └── locales/
-│   │       ├── en.json                 # All English strings
-│   │       └── np.json                 # All Nepali strings
-│   │
-│   └── lib/
-│       └── submitForm.ts              # Form submission abstraction (CF Function + Web3Forms fallback)
-│
-├── tasks/
-│   ├── 1-FEATURES.md                   # Feature breakdown with ASCII wireframes
-│   ├── ARCHITECTURE-DECISION.md        # This file
-│   ├── todo.md                         # Per-session task checklist (created during implementation)
-│   └── lessons.md                      # Self-improvement log (created after corrections)
-│
-├── CLAUDE.md                           # Project specification and AI workflow rules
-├── index.html                          # Vite HTML template (Google Fonts <link> here)
-├── package.json
-├── tsconfig.json
-├── tsconfig.node.json
-├── vite.config.ts
-├── wrangler.toml                       # Cloudflare Pages project config
-│
-├── scripts/                            # Post-build automation
-│   ├── generate-sitemap.mjs            # Generates dist/sitemap.xml with hreflang + today's date
-│   ├── inject-scripts.mjs              # Injects hashed main JS bundle into HTML files
-│   └── seo-report.mjs                  # CI validation: checks robots.txt, sitemap, OG tags, image alts
-│
-└── .github/
-    └── workflows/
-        └── deploy.yml                  # GitHub Actions: build + SEO check + deploy to Cloudflare Pages
-```
+The source tree is the source of truth — browse `src/` rather than relying on a hand-maintained listing here (an earlier detailed tree drifted from the code and was removed). Top level:
 
-**Build Pipeline (in order):**
-1. `tsc -b` — TypeScript build
-2. `vite build` — Vite pre-renders all 6 pages to static HTML
-3. `scripts/inject-scripts.mjs` — Injects hashed main bundle into all HTML files
-4. `scripts/generate-sitemap.mjs` — Generates `dist/sitemap.xml` from route config with today's date
-5. `npm run seo:report` — CI validation (run in GitHub Actions before deploy)
+| Path | Purpose |
+|------|---------|
+| `src/pages/` | One file per route; each exports `ssgOptions` for SSG |
+| `src/components/ui/` | Design-system primitives (Button, Card, Badge, PageHero, …) with a barrel `index.ts` |
+| `src/components/layout/` | App shell: Navbar, Footer, SkipToContentLink |
+| `src/components/seo/` | JSON-LD structured data |
+| `src/data/` | Typed static data (products, FAQ) |
+| `src/hooks/` | `useScrolled`, `useScrollAnimation` |
+| `src/i18n/` | `en.json`, `np.json`, `index.ts`, `ssgContext.tsx` (SSG layout wrapper) |
+| `src/utils/` | `seoHelpers.tsx` (page head + structured data) |
+| `src/routes.ts` | Single route manifest (see ADR-007) |
+| `functions/api/contact.ts` | Cloudflare Pages Function for the contact form |
+| `workers/contact-mailer/` | Mailer Worker (service-bound from the Function) |
+| `scripts/` | Post-build: `inject-scripts.mjs`, `generate-sitemap.mjs`, `seo-report.mjs` |
+| `public/` | Copied verbatim into `dist/` (robots.txt, `_redirects`, favicon, OG image) |
+| `.github/workflows/deploy.yml` | GitHub Actions CI/CD |
+
+`src/components/sections/` and `src/lib/` exist as empty placeholders (`.gitkeep`).
 
 ---
 
@@ -381,7 +273,7 @@ Both `en.json` and `np.json` are imported directly in `src/i18n/config.ts` and p
 **Status:** Decided
 
 **Context:**
-Two animation libraries were considered: Motion (formerly Framer Motion) and pure CSS. SKILLS.md demands "high-impact page load with staggered reveals" and "scroll-triggering and hover states."
+Two animation libraries were considered: Motion (formerly Framer Motion) and pure CSS. `docs/FRONTEND-GUIDELINES.md` demands "high-impact page load with staggered reveals" and "scroll-triggering and hover states."
 
 **Decision: Hybrid approach**
 
@@ -431,96 +323,66 @@ Two animation libraries were considered: Motion (formerly Framer Motion) and pur
 
 ---
 
-## ADR-005: Form Submission — Cloudflare Pages Function with Web3Forms Fallback
+## ADR-005: Form Submission — Cloudflare Pages Function with Contact Mailer Worker
 
-**Status:** Decided
+**Status:** Decided (supersedes the earlier Web3Forms design; Web3Forms is no longer used)
 
 **Context:**
-The contact form must send inquiry data to a single email inbox. Options: Cloudflare Pages Function, third-party form service (Web3Forms, Formspree), or email API (Resend, SendGrid).
+The contact form must send inquiry data to a single email inbox, with bot protection. Options: Cloudflare Pages Function calling a third-party form service (Web3Forms, Formspree), an email API (Resend, SendGrid), or Cloudflare's own `send_email` binding.
 
-**Decision: Cloudflare Pages Function as primary, Web3Forms as fallback**
+**Decision: Pages Function + Turnstile, delivering via a dedicated `contact-mailer` Worker**
 
-**Primary path (production):**
 ```
-Browser → POST /api/contact
-         → functions/api/contact.ts (Cloudflare Workers runtime)
-         → Web3Forms API (HTTP fetch with API key from CF env var)
-         → Email delivered to inbox
-```
-
-**Fallback path (local dev or if CF function not configured):**
-```
-Browser → POST directly to https://api.web3forms.com/submit
-         (with access_key from VITE_WEB3FORMS_KEY env var)
-         → Email delivered to inbox
+Browser → POST /api/contact (JSON + Turnstile token)
+         → functions/api/contact.ts (Pages Function)
+              1. verify Turnstile token (siteverify, secret = TURNSTILE_SECRET_KEY)
+              2. validate + trim fields
+              3. CONTACT_MAILER.fetch(...)   ← service binding
+         → workers/contact-mailer/src/index.js
+              → env.CONTACT_EMAIL.send(...)  ← Cloudflare `send_email` binding
+         → Email delivered to info@hooxygen.com.np
 ```
 
 **`functions/api/contact.ts` responsibilities:**
-1. Accept `POST` with JSON body
-2. Validate required fields server-side (name, email, phone, company)
-3. Sanitize inputs (trim whitespace, basic XSS prevention)
-4. Forward to Web3Forms API
-5. Return `{ success: true }` or `{ success: false, error: "..." }`
+1. Accept `POST` with `application/json` only (415 otherwise)
+2. Verify the Turnstile token (403 if the bot check fails)
+3. Validate required fields server-side (name, email, phone, company) and the email format
+4. Trim inputs and build the normalized payload
+5. Forward to the `CONTACT_MAILER` service binding (503 if not configured, 500 if delivery fails)
+6. Return `{ success: true }` or `{ success: false, error: "..." }`
 
-**`src/lib/submitForm.ts` client abstraction:**
-```ts
-export async function submitForm(data: ContactFormData): Promise<void> {
-  const endpoint = import.meta.env.VITE_FORM_ENDPOINT ?? 'https://api.web3forms.com/submit';
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error('Submission failed');
-}
-```
+**Client:** `ContactPage.tsx` POSTs directly to `/api/contact`. There is no `src/lib/submitForm.ts` abstraction, and no direct-to-third-party fallback for local dev (use `npm run cf:dev` to run the Function locally).
 
-**TypeScript note:** `functions/api/contact.ts` uses the Cloudflare Workers runtime, not the DOM. It needs `/// <reference types="@cloudflare/workers-types" />` at the top, or a separate `tsconfig.functions.json` that extends the root config and adds `@cloudflare/workers-types`.
+**TypeScript note:** `functions/api/contact.ts` uses the Cloudflare Workers runtime, not the DOM. It needs `/// <reference types="@cloudflare/workers-types" />` at the top.
 
 ---
 
-## ADR-006: Component Architecture — Flat + Section-Scoped
+## ADR-006: Component Architecture — Layered, Page-Scoped
 
-**Status:** Decided
+**Status:** Decided (revised: the originally planned `sections/` layer was not adopted; page sections live inside each page file)
 
 **Context:**
-React component organization patterns range from feature-based (one folder per feature), domain-based (one folder per domain entity), to layer-based (ui/layout/sections/pages).
+React component organization patterns range from feature-based (one folder per feature), domain-based (one folder per domain entity), to layer-based (ui/layout/pages).
 
-**Decision: Layer-based with section scoping**
-
-Three clear layers with no cross-layer imports in the wrong direction:
+**Decision: Layer-based, with page-specific sections defined inside their page file**
 
 ```
-pages/          → compose sections + layout
-sections/       → compose ui primitives + consume data
+pages/          → compose ui primitives + layout; page-specific sections are local components
 ui/             → pure presentational, zero business logic
-layout/         → app shell (Navbar, Footer, PageLayout)
+layout/         → app shell (Navbar, Footer)
+seo/            → structured data
 data/           → typed static data, no React
 hooks/          → reusable stateful logic, no JSX
-lib/            → pure utility functions, no React
+utils/          → pure helpers (SEO head generation)
 ```
 
 **Rules:**
 - `ui/` components accept only primitive props (strings, booleans, callbacks). They do not import from `data/`, `i18n/`, or `hooks/`.
-- `sections/` components import from `ui/` and `data/`. They use `useTranslation()` for i18n. They do not import from `pages/`.
-- `pages/` components import `sections/` and apply `SEOHead`. They do not contain layout logic.
-- No index barrel re-exports inside `sections/` or `pages/` — direct imports only to keep bundle analysis clear.
-- `ui/index.ts` is the only barrel file (for design system ergonomics).
+- `pages/` components use `useTranslation()` and import from `ui/` and `data/`; each applies its head via `generatePageHead()`.
+- No index barrel re-exports inside `pages/`; `ui/index.ts` is the only barrel file (for design system ergonomics).
+- Extract a section into its own component file only once it is reused by a second page.
 
-**Props pattern for UI components:**
-```tsx
-// Button — union type variant, not separate boolean flags
-type ButtonVariant = 'primary' | 'secondary' | 'ghost';
-type ButtonSize = 'sm' | 'md' | 'lg';
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  as?: 'button' | 'a';
-  to?: string;       // if as="Link" via react-router-dom
-  loading?: boolean;
-}
-```
+**Props pattern for UI components:** union-type variants rather than boolean flags (see `src/components/ui/Button.tsx`).
 
 ---
 
@@ -534,19 +396,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 **Decision: Single `src/routes.ts` manifest consumed by both**
 
 ```ts
-// src/routes.ts
+// src/routes.ts (abridged — see the file for the full list)
 export const ROUTES = [
-  { path: '/',          label: 'nav.home',     component: lazy(() => import('./pages/HomePage')) },
-  { path: '/about',     label: 'nav.about',    component: lazy(() => import('./pages/AboutPage')) },
-  { path: '/products',  label: 'nav.products', component: lazy(() => import('./pages/ProductsPage')) },
-  { path: '/contact',   label: 'nav.contact',  component: lazy(() => import('./pages/ContactPage')) },
-  { path: '/faq',       label: 'nav.faq',      component: lazy(() => import('./pages/FAQPage')) },
+  { path: '/',         labelKey: 'nav.home',     component: lazy(() => import('./pages/HomePage')) },
+  { path: '/services', labelKey: 'nav.services', component: lazy(() => import('./pages/ServicesPage')) },
+  // /products, /about, /contact, /faq …
 ] as const;
 
-// Consumed by vite.config.ts SSG includedRoutes:
-export const ROUTE_PATHS = ROUTES.map(r => r.path);
-// → ['/', '/about', '/products', '/contact', '/faq']
+export const ROUTE_PATHS = ROUTES.map((r) => r.path);
 ```
+
+The 404 page is intentionally **not** in `ROUTES`: it is pre-rendered by SSG (`slug: '404'`) and matched by a catch-all `*` route in `App.tsx`, so it stays out of the Navbar and sitemap.
 
 The `label` field is an i18n key, allowing the Navbar to render translated link labels by iterating `ROUTES` — no hardcoded nav link list.
 
@@ -617,22 +477,6 @@ export const FAQ_ITEMS: FAQItem[] = [
 ];
 ```
 
-### `src/data/team.ts`
-
-```ts
-export interface TeamMember {
-  id: string;
-  nameKey: string;
-  roleKey: string;
-  image: string;  // placeholder URL e.g. "https://placehold.co/300x300"
-}
-
-export const TEAM_MEMBERS: TeamMember[] = [
-  { id: 'tm-1', nameKey: 'about.team.member1.name', roleKey: 'about.team.member1.role', image: 'https://placehold.co/300x300/1E40AF/EFF6FF?text=Team' },
-  // 3-4 members
-];
-```
-
 ---
 
 ## 12. Styling System Design
@@ -655,7 +499,7 @@ Level 4: Component-level inline variants (via cva or plain template literals)
 
 ### Visual Design Language
 
-Per `docs/SKILLS.md`:
+Per `docs/FRONTEND-GUIDELINES.md`:
 
 | Element | Design choice | Implementation |
 |---------|---------------|----------------|
@@ -830,56 +674,51 @@ react-hook-form validates
       │
    valid
       ▼
-submitForm(data) called
+Turnstile token present? ──► NO ──► show error status, stop
       │
-      ├── VITE_FORM_ENDPOINT set?
-      │         │
-      │        YES ──► POST /api/contact (Cloudflare Pages Function)
-      │                      │
-      │                      ├── validate server-side
-      │                      ├── sanitize inputs
-      │                      └── POST to Web3Forms API ──► email delivered
+     YES
+      ▼
+POST /api/contact (Cloudflare Pages Function)
       │
-      └── NO (local dev) ──► POST https://api.web3forms.com/submit directly
-                                    └── email delivered
+      ├── verify Turnstile token  ──► fail: 403
+      ├── validate required fields + email format ──► fail: 400
+      └── CONTACT_MAILER service binding ──► contact-mailer Worker
+                                                └── send_email ──► inbox
       │
       ▼
-  success? ──► show success toast, reset form
-  error?   ──► show error toast, preserve form data
+  success? ──► show success status, reset form + Turnstile widget
+  error?   ──► show error status, preserve form data, reset Turnstile widget
 ```
 
-**Cloudflare Pages Function (`functions/api/contact.ts`):**
+**Client submit handler (`src/pages/ContactPage.tsx`):**
 ```ts
-/// <reference types="@cloudflare/workers-types" />
-
-export interface Env {
-  WEB3FORMS_KEY: string;
-}
-
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  const data = await request.json() as Record<string, unknown>;
-
-  // Server-side validation
-  const required = ['name', 'email', 'phone', 'company'];
-  for (const field of required) {
-    if (!data[field] || typeof data[field] !== 'string' || !data[field].trim()) {
-      return Response.json({ success: false, error: `${field} is required` }, { status: 400 });
+const onSubmit = async (data: ContactFormData) => {
+  if (!turnstileToken) {
+    setStatus('error')
+    return
+  }
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...data, turnstileToken }),
+    })
+    if (res.ok) {
+      setStatus('success')
+      reset()
+      setTurnstileToken(null)
+      if (widgetRef.current) window.turnstile?.reset(widgetRef.current)
+    } else {
+      setStatus('error')
+      if (widgetRef.current) window.turnstile?.reset(widgetRef.current)
     }
+  } catch {
+    setStatus('error')
   }
-
-  // Forward to Web3Forms
-  const response = await fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ access_key: env.WEB3FORMS_KEY, ...data }),
-  });
-
-  if (!response.ok) {
-    return Response.json({ success: false, error: 'Email delivery failed' }, { status: 500 });
-  }
-  return Response.json({ success: true });
-};
+}
 ```
+
+**Pages Function and mailer:** see ADR-005 and `functions/api/contact.ts`; the mailer Worker is `workers/contact-mailer/src/index.js`. Required config is listed in `runbooks/DEPLOY.md` (`TURNSTILE_SECRET_KEY`, `VITE_TURNSTILE_SITE_KEY`, `CONTACT_MAILER` binding).
 
 ---
 
@@ -893,7 +732,7 @@ GitHub repo (main branch)
 GitHub Actions (.github/workflows/deploy.yml)
       │
       ├── actions/checkout@v4
-      ├── actions/setup-node@v4 (Node 20)
+      ├── actions/setup-node@v4 (Node 22.16.0)
       ├── npm ci
       ├── npm run build   ──► produces dist/
       └── cloudflare/wrangler-action@v3
@@ -914,7 +753,9 @@ pages_build_output_dir = "dist"
 - `CLOUDFLARE_ACCOUNT_ID` — CF account ID
 
 **Cloudflare Pages environment variables (set in CF dashboard):**
-- `WEB3FORMS_KEY` — Web3Forms API key for form submission
+- `TURNSTILE_SECRET_KEY` — Turnstile secret for server-side token verification
+- Service binding `CONTACT_MAILER` → Worker `contact-mailer` (see `wrangler.toml`)
+- Full list: `runbooks/DEPLOY.md`
 
 **`public/_redirects`:** comment only — no `/* /index.html 200` catch-all (removed 2026-10-17), so Cloudflare Pages serves `dist/404.html` with HTTP 404 for unknown URLs.
 
@@ -1012,126 +853,7 @@ WCAG 2.1 AA compliance. Target score: Lighthouse Accessibility ≥ 95.
 
 ## 19. Complete File Manifest
 
-55 files total across all 14 feature tasks. Listed in creation order.
-
-**F-001 (Scaffolding) — 13 files:**
-```
-package.json
-tsconfig.json
-tsconfig.node.json
-vite.config.ts
-index.html
-src/main.tsx
-src/App.tsx
-src/routes.ts
-src/index.css
-src/vite-env.d.ts
-public/_redirects
-wrangler.toml
-.gitignore
-```
-
-**F-002 (i18n) — 4 files:**
-```
-src/i18n/config.ts
-src/i18n/locales/en.json
-src/i18n/locales/np.json
-src/hooks/useLanguageToggle.ts
-```
-
-**F-003 (Design System) — 8 files:**
-```
-src/components/ui/Button.tsx
-src/components/ui/Card.tsx
-src/components/ui/Badge.tsx
-src/components/ui/SectionHeader.tsx
-src/components/ui/PageHero.tsx
-src/components/ui/Toast.tsx
-src/components/ui/AnimateOnScroll.tsx
-src/components/ui/index.ts
-```
-
-**F-004 (Navbar) — 3 files:**
-```
-src/components/layout/Navbar.tsx
-src/components/layout/MobileDrawer.tsx
-src/hooks/useScrollPosition.ts
-```
-
-**F-005 (Footer) — 2 files:**
-```
-src/components/layout/Footer.tsx
-src/components/layout/PageLayout.tsx
-```
-
-**F-006 (Home) — 6 files:**
-```
-src/pages/HomePage.tsx
-src/components/sections/home/HeroSection.tsx
-src/components/sections/home/GasHighlights.tsx
-src/components/sections/home/ServicesStrip.tsx
-src/components/sections/home/TrustGallery.tsx
-src/components/sections/home/CTABanner.tsx
-```
-
-**F-007 (About) — 6 files:**
-```
-src/pages/AboutPage.tsx
-src/components/sections/about/StorySection.tsx
-src/components/sections/about/TeamSection.tsx
-src/components/sections/about/ServiceAreaSection.tsx
-src/components/sections/about/WhyChooseUsSection.tsx
-src/data/team.ts
-```
-
-**F-008 (Products) — 5 files:**
-```
-src/pages/ProductsPage.tsx
-src/components/sections/products/GasTabs.tsx
-src/components/sections/products/CylinderTable.tsx
-src/components/sections/products/ServicesSection.tsx
-src/data/products.ts
-```
-
-**F-009 (Contact) — 6 files:**
-```
-src/pages/ContactPage.tsx
-src/components/sections/contact/ContactForm.tsx
-src/components/sections/contact/ContactInfo.tsx
-src/components/sections/contact/MapEmbed.tsx
-src/lib/submitForm.ts
-functions/api/contact.ts
-```
-
-**F-010 (FAQ) — 5 files:**
-```
-src/pages/FAQPage.tsx
-src/components/sections/faq/CategoryFilter.tsx
-src/components/sections/faq/Accordion.tsx
-src/components/sections/faq/AccordionItem.tsx
-src/data/faq.ts
-```
-
-**F-011 (A11y/SEO) — 3 files:**
-```
-src/components/SEOHead.tsx
-public/robots.txt
-public/sitemap.xml
-```
-
-**F-012 (Animations) — 1 file:**
-```
-src/hooks/useIntersectionObserver.ts
-```
-*(AnimateOnScroll.tsx already created in F-003)*
-
-**F-013 (Responsive) — 0 new files**
-*(All responsive work is modification of existing components)*
-
-**F-014 (Deployment) — 1 file:**
-```
-.github/workflows/deploy.yml
-```
+Removed: the per-feature (F-001 … F-014) file lists went stale as the code evolved. Use `git ls-files` for the current file set and `CHANGELOG.md` / `tasks/1-FEATURES.md` for feature history. See §3 for the top-level layout.
 
 ---
 
@@ -1145,7 +867,7 @@ src/hooks/useIntersectionObserver.ts
 | Google Maps embed blocked by CSP | Low | Low | Add `maps.googleapis.com` to `Content-Security-Policy` header in CF Pages |
 | Motion bundle too large | Low | Low | Motion is tree-shakeable; only import used components; verify bundle size after F-012 |
 | Accordion animation broken in Safari | Medium | Low | Test `grid-template-rows` transition in Safari; fallback to `max-height: 500px` with `overflow: hidden` if needed |
-| Form submission fails due to CORS | Low | High | Cloudflare Pages Function runs same-origin; Web3Forms CORS is open; no CORS issue expected |
+| Form submission fails due to CORS | Low | High | Cloudflare Pages Function runs same-origin; no CORS issue expected |
 | SSG pre-render fails on dynamic components (tabs, accordion) | Medium | Medium | SSR-safe initial state: first tab shown by default; accordion all collapsed by default; no `window` access at render time |
 
 ---

@@ -18,6 +18,6 @@ Visit following websites to explore best practices regarding Search Engine Optim
 - CI/CD ready (robots.txt, sitemap.xml), Github workflow pipeline ready
 
 ## Instruction
-Analyse the codebase, then write detailed implementation plan to implement SEO to tasks/SEO.md.
+Analyse the codebase, then write detailed implementation plan to implement SEO to `tasks/<YYYY-MM-DD>-seo-plan.md`.
 
 Always summarise then wait for user input before proceeding to next step. Do not proceed without user input.

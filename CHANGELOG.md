@@ -4,6 +4,20 @@ All notable changes to the HO Oxygen website are recorded here in reverse-chrono
 
 ---
 
+## 2026-10-17 — Retire completed docs; sync remaining docs
+
+**Removed:** `DOCS_SYNC_SUMMARY.md`, `runbooks/3-STANDARD-MENUS.md`, `runbooks/4-FIX-GAS-ICONS-REMOVE-WEIGHT.md`, `runbooks/4-FIX-SSGLayout.md`, `runbooks/5-FIX-i18n.md`, `runbooks/FIX-INTERSECTION-OBSERVER.md`, `runbooks/CLOUDFLARE-PAGES.md`, `tasks/CTA.md`, `tasks/SEO.md` (history stays in git)
+
+**Changes:**
+- `CLAUDE.md`: fixed doc paths, Phases 4–6 marked complete, date and state updated
+- `docs/ARCHITECTURE-DECISION.md`: form flow now Turnstile + `contact-mailer` (Web3Forms removed); file trees replaced by a pointer to `src/`; ADR-006/007 match the code
+- `runbooks/lessons.md`: added L-010 (SSG bundle injection) and L-011 (scroll-animation visibility) from the retired fix write-ups
+- `runbooks/DEPLOY.md`: Node 22.16.0, Branch Previews section, `CONTACT_MAILER` binding check
+- `tasks/1-FEATURES.md`: removed Weight column and Team/Web3Forms notes
+- `.claude/skills/seo/SKILL.md`: plan output goes to a dated file instead of `tasks/SEO.md`
+
+---
+
 ## 2026-10-17 — Fix Workers Builds branch deploys; document previews
 
 **Affected:** Cloudflare Workers Builds triggers on Worker `hooxygen` (dashboard/API, not in repo), `runbooks/DEPLOY.md`

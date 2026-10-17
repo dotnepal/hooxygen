@@ -190,3 +190,27 @@ export const ssgOptions: SsgOptions = {
 **How to apply:** Before marking any data-display feature done, open CLAUDE.md §2.3 and verify each rendered column/field appears in the spec. Remove anything not explicitly listed.
 
 **Discovered during:** Post-Phase-2 bug fix (2026-03-29) — weight column appeared in Products table but was never part of the spec.
+
+---
+
+## L-010: vite-plugin-ssg overwrites `dist/index.html` without the JS bundle
+
+**Pattern:** `vite build` emits `dist/index.html` with a `<script type="module" src="/assets/index-{hash}.js">` tag, then `vite-plugin-ssg` overwrites it (and writes `about.html`, etc.) from its own template, which has no bundle `<script>`. The built site is static HTML only: the language toggle, mobile menu, FAQ accordion and contact form do nothing.
+
+**Symptom:** Everything works in `npm run dev` (no SSG step) but no interaction works in `dist/` or on Cloudflare.
+
+**How to apply:** Keep `scripts/inject-scripts.mjs` in the build chain; it injects the hashed `index-*.js` before `</body>` in every `dist/*.html` (including `404.html`). The pre-paint language script goes through `config.html.headTags` in `vite.config.ts`. After changing the build, run `rg "assets/index-" dist/*.html` and confirm every page has the tag.
+
+**Discovered during:** i18n toggle fix (2026-03-28).
+
+---
+
+## L-011: Don't toggle classes React owns; observe containers with `threshold: 0`
+
+**Pattern:** (1) Adding a class (`classList.add('is-visible')`) to an element React renders is fragile: any re-render (for example i18next's language detection) rewrites `class` from the JSX prop and erases it. Set a `data-*` attribute instead; React never diffs attributes it doesn't know about. (2) An `IntersectionObserver` on a tall layout container with `threshold: 0.12` never fires on mobile, because 12% of a stacked grid is more than the viewport shows.
+
+**Symptom:** Text in card sections flashes or stays invisible (`opacity: 0`) in production builds; hero text, which has no `animate-on-scroll`, is fine.
+
+**How to apply:** `useScrollAnimation` sets `el.dataset.visible = '1'`, CSS targets `.animate-on-scroll[data-visible]`, and the observer uses `threshold: 0` with `rootMargin: '0px 0px -60px 0px'`. Keep all three together when touching scroll animations, and test at 375px and 1280px with a production build.
+
+**Discovered during:** Homepage invisible-text fix (2026-03-28).
